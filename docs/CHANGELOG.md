@@ -5,6 +5,12 @@ assigned at first release.
 
 ## [Unreleased]
 
+### Released — 2026-11-02, verification codes by email
+
+- Supabase custom SMTP via Resend (`no-reply@paradisetrades.com`); Resend DNS records in Cloudflare.
+- "Confirm sign up" template now sends an 8-digit code (`{{ .Token }}`) instead of a link.
+- Supabase minimum password length 6 → 10. Verify page copy updated. Worker version `fc4da62e`.
+
 ### Released — 2026-11-02, paradisetrades.com
 
 - Custom domains `paradisetrades.com` and `www.paradisetrades.com` on the Worker (`wrangler.jsonc` routes);

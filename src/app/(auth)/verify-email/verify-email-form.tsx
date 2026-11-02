@@ -40,8 +40,7 @@ export function VerifyEmailForm({ email, notice }: { email: string; notice?: str
         <FormAlert error={resend.state.error} message={resend.state.message} />
         <input type="hidden" name="email" value={email} />
         <p className="text-sm text-muted-foreground">
-          Didn&apos;t get it? Check spam, or send a new code. If your email has a confirmation link instead of a
-          code, clicking the link works too.
+          Didn&apos;t get it? Check your spam folder, or send a new code. It comes from no-reply@paradisetrades.com.
         </p>
         <Button type="submit" variant="outline" size="sm" disabled={resend.isPending || !email} className="w-full sm:w-auto">
           {resend.isPending ? "Sending…" : "Send a new code"}

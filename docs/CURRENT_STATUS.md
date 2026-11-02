@@ -16,8 +16,10 @@ _Last updated: 2026-11-02 (Milestone 2 session)._
   workers.dev still works. Production e2e: 22/22 pass on the new domain.
 - Supabase Auth Site URL is now `https://paradisetrades.com`; redirect URLs: paradisetrades.com, workers.dev,
   localhost:3000, localhost:8787.
-- Code-based email verification (`/verify-email`) is deployed. Emails still contain a link (default Supabase
-  template, which also works) until custom SMTP is connected and the template switched.
+- **Code-based email verification is live** (Worker version `fc4da62e-0bf5-40d3-a725-df607d61bab8`): Supabase sends via
+  Resend from `no-reply@paradisetrades.com` (domain verified, DKIM/DMARC in Cloudflare DNS); the "Confirm sign up"
+  email contains an 8-digit code only; Supabase minimum password length raised to 10. Production e2e 22/22
+  (after one cold-start flake rerun). **Not yet verified:** a real sign-up receiving and entering the code.
 
 ## Environments
 
@@ -61,8 +63,7 @@ the deployed Worker (test accounts are only used on local hosts). Owner to do on
 
 ## Open items
 
-0. **Code-based email verification** — implemented and tested in the app (not deployed). Codes cannot be
-   emailed until custom SMTP is configured in Supabase (default templates are link-only and locked).
+0. **Owner's real sign-up** at https://paradisetrades.com to confirm the code email arrives and verifies.
 
 1. **Real sign-up on production** with a real inbox (confirm link → onboarding → publish → public page).
 2. **Password reset** end to end with a real inbox.

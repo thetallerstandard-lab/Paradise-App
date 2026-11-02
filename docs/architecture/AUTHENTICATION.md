@@ -19,10 +19,13 @@ verified end to end. Not deployed.
 Middleware redirects anonymous users from `/dashboard`, `/onboarding`, `/profile` to `/sign-in?next=…`, and
 signed-in users from `/sign-in`, `/sign-up` to `/dashboard`. The `(app)` layout re-checks with `requireUser()`.
 
-**Email template (blocked):** for codes to arrive, Supabase's "Confirm sign up" template must contain
-`{{ .Token }}`. The default template contains only `{{ .ConfirmationURL }}`, and Supabase allows editing
-templates only after **custom SMTP** is configured. Until then users receive a link; the link still works via
-`/auth/callback`, and `/verify-email` tells them so. Template to use once SMTP is set:
+**Email delivery (configured 2026-11-02):** Supabase custom SMTP → **Resend** (`smtp.resend.com:465`, user
+`resend`, password = a Resend API key with *Sending access* limited to `paradisetrades.com`, entered by the
+owner). Sender `Paradise <no-reply@paradisetrades.com>`. Domain verified in Resend with DKIM (`resend._domainkey`),
+`send`/`rsend` CNAMEs (DNS only) and DMARC `p=none` in Cloudflare DNS. Supabase minimum password length = 10
+(matches the app). The "Confirm sign up" template (subject "Your Paradise verification code") contains only
+`{{ .Token }}` — no link. The `/auth/callback` route remains for password-reset links. Template body is
+equivalent to:
 
 ```html
 <h2>Your Paradise verification code</h2>
