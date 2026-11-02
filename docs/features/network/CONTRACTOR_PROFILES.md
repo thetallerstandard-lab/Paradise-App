@@ -1,6 +1,8 @@
 # Contractor profiles
 
-**Status: Planned.** Table `contractor_profiles` and `contractorProfileInputSchema` are implemented, unverified.
+**Status: Implemented and tested locally (Milestone 2), not yet deployed.** Editor at `/profile`, public page at
+`/c/<organization-slug>`. Town is chosen from `LANCASTER_TOWNS`; service radius 10/25/50 miles creates the
+organization's "Primary service area". Publishing requires a main trade, headline and town.
 
 ## What a profile is
 

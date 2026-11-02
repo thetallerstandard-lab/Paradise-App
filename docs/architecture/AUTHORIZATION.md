@@ -47,7 +47,9 @@ anonymous users see trade categories but no requests.
 ## Still to verify / do
 
 - Organization insert with `.select()` returning the new row via the API (smoke test inserts without RETURNING).
-- An organization can lose its last owner if an owner removes themselves; add a guard before invites ship.
+- ~~Last-owner removal~~ — guarded by `enforce_last_owner` (Milestone 2, tested).
+- Profile writes go through `save_contractor_profile()` (owner/admin check + RLS); the app also hides the
+  editor from plain members.
 - Convert the smoke test to pgTAP and run it in CI before Milestone 3 ships.
 
 Related: [SECURITY.md](SECURITY.md), [DATABASE_DESIGN.md](DATABASE_DESIGN.md).

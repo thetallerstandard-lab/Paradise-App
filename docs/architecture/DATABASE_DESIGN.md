@@ -46,6 +46,15 @@ organizations 1─* resource_requests 1─* exchange_offers *─1 organizations 
   non-pending offers are final.
 - Service area must be exactly one shape (`service_areas_shape_check`).
 
+## Milestone 2 additions
+
+- `contractor_profiles.base_town` — the town label for `map_point`.
+- `save_contractor_profile(p_organization_id, …)` — `SECURITY INVOKER` RPC (granted to `authenticated` only) that
+  upserts the profile, replaces its trades, and replaces the organization's "Primary service area" in one
+  transaction. Checks `private.has_org_role(owner|admin)` and every statement still passes RLS.
+- `enforce_last_owner` trigger — an organization always keeps at least one active owner (skipped when the
+  organization itself is being deleted).
+
 ## Deliberately absent
 
 - **No Paradise Points balances or ledger.** `budget_points` and `points_amount` are numbers on a

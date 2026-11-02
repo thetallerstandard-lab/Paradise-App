@@ -16,6 +16,14 @@ tests against `next dev` and 6 against the Workers preview. CI not yet run.
 
 `npm run check` = typecheck + lint + unit tests.
 
+## Milestone 2 manual journey (signed-in)
+
+Automated e2e covers signed-out behaviour only (CI has no Supabase credentials and email confirmation needs
+an inbox). To test the signed-in journey: create a confirmed test user with SQL (see the pattern used on
+2026-11-02 in the session log: insert into `auth.users` + `auth.identities` with `email_confirmed_at = now()`),
+sign in on `npm run preview`, onboard and publish, then **delete the organization and the auth user**.
+Never send confirmation emails to fake inboxes — bounces hurt the project's email reputation.
+
 ## Current tests
 
 - `tests/unit/env.test.ts` — env validation, missing-key messages.

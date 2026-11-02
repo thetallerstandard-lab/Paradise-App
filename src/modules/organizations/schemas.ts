@@ -15,13 +15,31 @@ export function slugify(name: string): string {
     .replace(/-+$/g, "");
 }
 
-export const organizationSlugSchema = z.string().min(2).max(64).regex(SLUG_PATTERN, "Use lowercase letters, numbers and single hyphens");
+export const organizationSlugSchema = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .min(2, "Use at least 2 characters")
+  .max(64, "Use at most 64 characters")
+  .regex(SLUG_PATTERN, "Use lowercase letters, numbers and single hyphens");
+
+/** Optional website: accepts "example.com" and adds https://. */
+const websiteSchema = z
+  .string()
+  .trim()
+  .transform((v) => (/^https?:\/\//i.test(v) ? v : `https://${v}`))
+  .pipe(z.url("Enter a valid website address"));
 
 export const createOrganizationInputSchema = z.object({
-  name: z.string().trim().min(2).max(120),
+  name: z.string().trim().min(2, "Enter your business name").max(120),
   slug: organizationSlugSchema,
-  phone: z.string().trim().max(32).optional(),
-  website: z.url().optional(),
+  phone: z
+    .string()
+    .trim()
+    .max(32)
+    .regex(/^[0-9+().\-\s]*$/, "Use digits and + ( ) - . only")
+    .optional(),
+  website: websiteSchema.optional(),
 });
 
 export const membershipRoleSchema = z.enum(["owner", "admin", "member"]);

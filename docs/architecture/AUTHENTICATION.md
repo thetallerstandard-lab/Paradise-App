@@ -1,7 +1,25 @@
 # Authentication
 
-**Status:** clients and session middleware **Implemented** (unverified, no
-Supabase project). Sign-up/sign-in UI **Planned** for Milestone 2.
+**Status (2026-11-02):** clients, middleware, sign-in and sign-out **tested** on the Workers preview.
+Sign-up (with email confirmation) and password reset **implemented**; their email links are not yet
+verified end to end. Not deployed.
+
+## Routes
+
+| Route | Purpose |
+| --- | --- |
+| `/sign-up` | Email + password + name; `signUp` with `emailRedirectTo=/auth/callback?next=/onboarding` → `/check-email` |
+| `/sign-in` | `signInWithPassword`; honours a same-origin `next` (`safeNextPath`) |
+| `/forgot-password` | `resetPasswordForEmail` → link to `/auth/callback?next=/reset-password`; same reply whether or not the account exists |
+| `/reset-password` | Signed-in (via the link) user sets a new password |
+| `/auth/callback` | Exchanges `code` (PKCE) or verifies `token_hash`, then redirects to `next`; failures → `/sign-in?error=link` |
+| `/auth/sign-out` | **POST only**, 303 to `/` |
+
+Middleware redirects anonymous users from `/dashboard`, `/onboarding`, `/profile` to `/sign-in?next=…`, and
+signed-in users from `/sign-in`, `/sign-up` to `/dashboard`. The `(app)` layout re-checks with `requireUser()`.
+
+**Supabase configuration required:** Auth → URL configuration → Site URL = production origin; redirect URLs for
+production, `http://localhost:3000/**`, `http://localhost:8787/**`. Custom SMTP before launch.
 
 ## Approach
 

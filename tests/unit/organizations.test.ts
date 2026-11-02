@@ -21,7 +21,17 @@ describe("slugify", () => {
 
 describe("createOrganizationInputSchema", () => {
   it("rejects slugs the database would reject", () => {
-    const result = createOrganizationInputSchema.safeParse({ name: "Acme", slug: "Acme--Co" });
+    const result = createOrganizationInputSchema.safeParse({ name: "Acme", slug: "acme--co" });
     expect(result.success).toBe(false);
+  });
+
+  it("lower-cases the slug and adds https:// to bare websites", () => {
+    const parsed = createOrganizationInputSchema.parse({ name: "Acme", slug: "Acme-Co", website: "acme.example" });
+    expect(parsed.slug).toBe("acme-co");
+    expect(parsed.website).toBe("https://acme.example");
+  });
+
+  it("rejects phone numbers with letters", () => {
+    expect(createOrganizationInputSchema.safeParse({ name: "Acme", slug: "acme", phone: "call me" }).success).toBe(false);
   });
 });

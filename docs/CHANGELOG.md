@@ -5,6 +5,19 @@ assigned at first release.
 
 ## [Unreleased]
 
+### Added — 2026-11-02, Milestone 2 Network (not yet deployed)
+
+- Full landing page; route groups `(marketing)`, `(auth)`, `(app)`; global 404.
+- Email/password sign-up with confirmation, sign-in, POST sign-out, forgot/reset password, `/auth/callback`
+  (PKCE code and token_hash), open-redirect-safe `next` handling.
+- Middleware protects `/dashboard`, `/onboarding`, `/profile`; signed-in users skip `/sign-in`, `/sign-up`.
+- Onboarding (create organization with auto slug), business profile editor (main + other trades, town,
+  service radius, years, licence, insurance, draft/publish), dashboard checklist, public profile `/c/<slug>`.
+- Migrations: `contractor_profiles.base_town`, `save_contractor_profile()` atomic RLS-checked RPC,
+  last-owner guard trigger, RPC parameter defaults.
+- Security headers (CSP, HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy).
+- Tests: 48 unit/component, 18 e2e (signed-out flows, headers, validation, 404).
+
 ### Released — 2026-11-02, first deploy
 
 - Worker `paradise` deployed to https://paradise.paradise-contractors.workers.dev

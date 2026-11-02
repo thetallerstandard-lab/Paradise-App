@@ -1,7 +1,7 @@
 # Landing page
 
-**Status: Planned (Milestone 2).** The current `/` is a foundation placeholder
-(brand statement + three pillar cards) used for smoke testing.
+**Status: Implemented and tested locally (Milestone 2), not yet deployed.** `src/app/(marketing)/page.tsx`,
+prerendered static. All planned sections below exist except the Open Graph image and analytics event.
 
 ## Goals
 

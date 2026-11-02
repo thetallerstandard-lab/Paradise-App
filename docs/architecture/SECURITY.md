@@ -18,8 +18,14 @@
 - Authorize on the server and in RLS ([AUTHORIZATION.md](AUTHORIZATION.md)).
 - Use `supabase.auth.getUser()` on the server for identity.
 - Server actions rely on Next.js's built-in Origin checks for CSRF; do not add GET endpoints that mutate.
-- `poweredByHeader` is disabled. Security headers (CSP, HSTS, `X-Content-Type-Options`, `Referrer-Policy`)
-  are **Planned** for Milestone 2, set in middleware once third-party origins (Mapbox, Supabase) are final.
+- `poweredByHeader` is disabled. Security headers are set for every route in `next.config.ts` (tested by e2e):
+  CSP (`default-src 'self'`, Supabase in `connect-src`, `frame-ancestors 'none'`, `form-action 'self'`,
+  `object-src 'none'`), HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`.
+  Scripts still allow `'unsafe-inline'` (Next.js bootstrap); move to nonces before adding Mapbox.
+- Open redirects: every user-supplied `next` goes through `safeNextPath()` (same-origin paths only).
+- Stored URLs (organization website) are rendered as links only if they start with `http(s)://`, because owners
+  can write rows directly through the API.
+- Sign-out is POST-only; forgot-password responses do not reveal whether an account exists.
 - `global_fetch_strictly_public` is enabled in Wrangler.
 
 ## Data
