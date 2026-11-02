@@ -23,7 +23,7 @@ export const forgotPasswordInputSchema = z.object({
 });
 
 /**
- * Email confirmation code. The project sends 8 digits (Supabase "Email OTP
+ * Email confirmation code. The project sends 6 digits (Supabase "Email OTP
  * length"); accept 6–10 so changing that setting does not break the form.
  * Spaces and dashes users paste from the email are stripped.
  */

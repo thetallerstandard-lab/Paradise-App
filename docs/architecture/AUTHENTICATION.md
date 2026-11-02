@@ -9,7 +9,7 @@ verified end to end. Not deployed.
 | Route | Purpose |
 | --- | --- |
 | `/sign-up` | Email + password + name; `signUp` (keeps `emailRedirectTo=/auth/callback?next=/onboarding` as a fallback) → `/verify-email?email=…` |
-| `/verify-email` | **Code-based confirmation.** User enters the emailed code (8 digits, 1-hour expiry; form accepts 6–10 digits, spaces/dashes stripped) → `verifyOtp({ email, token, type: "email" })` → `/onboarding`. "Send a new code" calls `resend({ type: "signup" })` with a non-revealing reply. |
+| `/verify-email` | **Code-based confirmation.** User enters the emailed code (6 digits — Supabase's minimum; 1-hour expiry; form accepts 6–10 digits, spaces/dashes stripped) → `verifyOtp({ email, token, type: "email" })` → `/onboarding`. "Send a new code" calls `resend({ type: "signup" })` with a non-revealing reply. |
 | `/sign-in` | `signInWithPassword`; honours a same-origin `next` (`safeNextPath`); unconfirmed accounts are sent to `/verify-email` |
 | `/forgot-password` | `resetPasswordForEmail` → link to `/auth/callback?next=/reset-password`; same reply whether or not the account exists |
 | `/reset-password` | Signed-in (via the link) user sets a new password |

@@ -18,8 +18,9 @@ _Last updated: 2026-11-02 (Milestone 2 session)._
   localhost:3000, localhost:8787.
 - **Code-based email verification is live** (Worker version `fc4da62e-0bf5-40d3-a725-df607d61bab8`): Supabase sends via
   Resend from `no-reply@paradisetrades.com` (domain verified, DKIM/DMARC in Cloudflare DNS); the "Confirm sign up"
-  email contains an 8-digit code only; Supabase minimum password length raised to 10. Production e2e 22/22
-  (after one cold-start flake rerun). **Not yet verified:** a real sign-up receiving and entering the code.
+  email contains a 6-digit code only (Supabase minimum; 4 is not supported); Supabase minimum password length
+  raised to 10. **Verified 19:53–19:54 UTC:** a real sign-up received the code and verified. Resend key in use:
+  `supabase-smtp-4` (Sending access, paradisetrades.com); unused keys deleted.
 
 ## Environments
 
@@ -63,7 +64,6 @@ the deployed Worker (test accounts are only used on local hosts). Owner to do on
 
 ## Open items
 
-0. **Owner's real sign-up** at https://paradisetrades.com to confirm the code email arrives and verifies.
 
 1. **Real sign-up on production** with a real inbox (confirm link → onboarding → publish → public page).
 2. **Password reset** end to end with a real inbox.

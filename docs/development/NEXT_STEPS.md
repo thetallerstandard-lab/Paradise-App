@@ -4,7 +4,7 @@
 
 1. **Owner:** sign up at https://paradisetrades.com/sign-up with a real email address. The email
    "Your Paradise verification code" from `no-reply@paradisetrades.com` should arrive within a minute;
-   enter the 8-digit code, then create the business and publish the profile. Also try "Forgot your password".
+   enter the 6-digit code, then create the business and publish the profile. Also try "Forgot your password".
    Report anything that breaks (including spam-folder delivery).
 2. Add `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` GitHub repository secrets.
 3. Consider moving the repo out of OneDrive (see KNOWN_ISSUES #4b).

@@ -5,6 +5,13 @@ assigned at first release.
 
 ## [Unreleased]
 
+### Changed — 2026-11-02, 6-digit codes
+
+- Supabase "Email OTP length" 8 → 6 (owner asked for 4; Supabase's minimum is 6).
+- Root cause of the SMTP failures: the Browser pane's copy button did not reach the Windows clipboard, so a
+  different 117-character value was pasted as the password. Key `supabase-smtp-4`, created and copied in the
+  owner's own browser, works; sign-up verified 19:54 UTC. Unused keys `supabase-smtp`, `-2`, `-3` deleted.
+
 ### Fixed — 2026-11-02, sign-ups failing (SMTP auth)
 
 - Incident 19:35–19:40 UTC: every sign-up returned 500 because Resend rejected Supabase's SMTP password
