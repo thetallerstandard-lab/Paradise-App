@@ -49,6 +49,14 @@ export async function signUpAction(_prev: FormState, formData: FormData): Promis
     if (error.code === "over_email_send_rate_limit") {
       return { error: "Too many sign-up emails were sent recently. Please try again in a little while." };
     }
+    // Logged to Workers Logs (no email address) so failures like SMTP auth
+    // errors are visible without digging through Supabase.
+    console.error("signup_failed", { status: error.status, code: error.code, message: error.message });
+    if ((error.status ?? 0) >= 500) {
+      return {
+        error: "We couldn't send your verification email just now, so your account wasn't created. Please try again in a few minutes.",
+      };
+    }
     return { error: "We couldn't create your account. Please try again." };
   }
 
@@ -88,6 +96,10 @@ export async function resendCodeAction(_prev: FormState, formData: FormData): Pr
   const { error } = await supabase.auth.resend({ type: "signup", email: parsed.data.email });
   if (error && (error.code === "over_email_send_rate_limit" || error.status === 429)) {
     return { error: "A code was sent recently. Wait a minute before asking for another." };
+  }
+  if (error && (error.status ?? 0) >= 500) {
+    console.error("resend_code_failed", { status: error.status, code: error.code, message: error.message });
+    return { error: "We couldn't send a new code just now. Please try again in a few minutes." };
   }
   // Same reply whether or not the account exists or is already confirmed.
   return { message: "If that account still needs confirming, a new code is on its way." };

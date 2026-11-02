@@ -5,6 +5,14 @@ assigned at first release.
 
 ## [Unreleased]
 
+### Fixed — 2026-11-02, sign-ups failing (SMTP auth)
+
+- Incident 19:35–19:40 UTC: every sign-up returned 500 because Resend rejected Supabase's SMTP password
+  (`535 Authentication credentials invalid`); the saved value was not the full API key. No partial accounts
+  were created (Supabase rolls back). Owner created key `supabase-smtp-2` and saved it in full (config reload 19:39:58).
+- Sign-up and resend-code now show "We couldn't send your verification email…" on 5xx and log
+  `signup_failed` / `resend_code_failed` (status, code, message; no email address) to Workers Logs. Version `e80cbbdd`.
+
 ### Released — 2026-11-02, verification codes by email
 
 - Supabase custom SMTP via Resend (`no-reply@paradisetrades.com`); Resend DNS records in Cloudflare.

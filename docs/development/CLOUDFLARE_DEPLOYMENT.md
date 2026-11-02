@@ -101,6 +101,7 @@ Then update `NEXT_PUBLIC_SITE_URL`, rebuild, and add the domain to Supabase Auth
 | 500 on every page | `npx wrangler tail` for the stack trace; Workers Logs in the dashboard (observability enabled) |
 | `Missing or invalid public environment variables` | `NEXT_PUBLIC_*` were absent at **build** time; rebuild with them set |
 | `Missing or invalid server environment variables` | `npx wrangler secret list`; set the secret |
+| Sign-up shows "We couldn't send your verification email" | `npx wrangler tail` for `signup_failed`; Supabase auth logs. `535 Authentication credentials invalid` = wrong Resend API key in Supabase SMTP settings (re-create the key, paste it in full) |
 | Users logged out on each request | Supabase redirect URL / Site URL mismatch; cookies blocked; middleware matcher excludes the route |
 | Error mentioning a Node.js module | Dependency not Workers-compatible; confirm `nodejs_compat`; replace the dependency |
 | `Script startup exceeded CPU time limit` or size errors | Bundle too large; inspect `.open-next/`, remove heavy server deps; consider Workers Paid |
