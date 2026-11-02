@@ -3,7 +3,7 @@ import "server-only";
 import { cache } from "react";
 
 import { createClient } from "@/lib/supabase/server";
-import type { CreateOrganizationInput } from "@/modules/organizations/schemas";
+import { slugCandidates, type CreateOrganizationInput } from "@/modules/organizations/schemas";
 
 export type MyOrganization = {
   id: string;
@@ -12,8 +12,13 @@ export type MyOrganization = {
   role: "owner" | "admin" | "member";
 };
 
-/** Active organizations the current user belongs to, oldest membership first. */
-export const getMyOrganizations = cache(async (userId: string): Promise<MyOrganization[]> => {
+/**
+ * Active organizations the current user belongs to, oldest membership first.
+ * Uncached: server actions that create or change organizations must use this,
+ * because a server action's redirect renders the next page in the same
+ * request, where the cached version would still return the old answer.
+ */
+export async function fetchMyOrganizations(userId: string): Promise<MyOrganization[]> {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("organization_memberships")
@@ -30,14 +35,21 @@ export const getMyOrganizations = cache(async (userId: string): Promise<MyOrgani
     slug: row.organizations.slug,
     role: row.role,
   }));
-});
+}
+
+/** Cached per request, for pages and layouts. */
+export const getMyOrganizations = cache(fetchMyOrganizations);
 
 /**
  * The organization the user is acting for. MVP rule: their first active
  * membership. A switcher (stored choice) comes with multi-organization support.
+ * Pass `{ fresh: true }` from server actions (see fetchMyOrganizations).
  */
-export async function getActiveOrganization(userId: string): Promise<MyOrganization | null> {
-  const organizations = await getMyOrganizations(userId);
+export async function getActiveOrganization(
+  userId: string,
+  options: { fresh?: boolean } = {},
+): Promise<MyOrganization | null> {
+  const organizations = options.fresh ? await fetchMyOrganizations(userId) : await getMyOrganizations(userId);
   return organizations[0] ?? null;
 }
 
@@ -70,4 +82,43 @@ export async function createOrganization(
     return { ok: false, reason: "error", message: "We couldn't create your business. Please try again." };
   }
   return { ok: true, organization: data };
+}
+
+/**
+ * Creates the business with an automatically chosen web address, trying the
+ * next candidate whenever one is taken. Users never see a "slug" field.
+ */
+export async function createOrganizationWithAutoSlug(
+  userId: string,
+  input: { name: string; phone?: string; town?: string },
+): Promise<CreateOrganizationResult> {
+  for (const slug of slugCandidates(input.name, input.town)) {
+    const result = await createOrganization(userId, { name: input.name, slug, phone: input.phone });
+    if (result.ok || result.reason !== "slug_taken") return result;
+  }
+  return { ok: false, reason: "error", message: "We couldn't create your business. Please try again." };
+}
+
+/** Updates the business name and phone (owners and admins; enforced by RLS). */
+export async function updateOrganizationBasics(
+  organizationId: string,
+  input: { name: string; phone?: string },
+): Promise<{ ok: boolean }> {
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("organizations")
+    .update({ name: input.name, phone: input.phone ?? null })
+    .eq("id", organizationId);
+  return { ok: !error };
+}
+
+/** Name, slug and phone for the active business. */
+export async function getOrganizationDetails(organizationId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("organizations")
+    .select("id, name, slug, phone")
+    .eq("id", organizationId)
+    .maybeSingle();
+  return data;
 }

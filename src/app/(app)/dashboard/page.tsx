@@ -1,89 +1,151 @@
-import { ArrowRight, CheckCircle2, Circle, Handshake } from "lucide-react";
+import { ArrowRight, CheckCircle2, ExternalLink, Inbox, PartyPopper, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { CopyLinkButton } from "@/components/app/copy-link-button";
+import { FormAlert } from "@/components/forms/form-parts";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { displayNameOf, requireUser } from "@/modules/identity/server";
-import { getProfileForEditing } from "@/modules/network/server";
-import { getActiveOrganization } from "@/modules/organizations/server";
+import { getPublicEnv } from "@/lib/env";
+import { displayNameOf } from "@/modules/identity/server";
+import { ONBOARDING_STEPS, profileStrength, stepIndex } from "@/modules/network";
 
-export const metadata: Metadata = { title: "Dashboard" };
+import { loadOnboarding } from "../onboarding/state";
 
-export default async function DashboardPage() {
-  const user = await requireUser("/dashboard");
-  const organization = await getActiveOrganization(user.id);
-  const profile = organization ? await getProfileForEditing(organization.id) : null;
-  const published = profile?.visibility === "published";
+export const metadata: Metadata = { title: "Home" };
 
-  const checklist = [
-    { done: true, label: "Create your account" },
-    { done: Boolean(organization), label: "Add your business", href: "/onboarding" },
-    { done: Boolean(profile), label: "Fill in your business profile", href: "/profile" },
-    { done: published, label: "Publish your profile", href: "/profile" },
-  ];
-  const nextStep = checklist.find((item) => !item.done);
+const WELCOME: Record<string, string> = {
+  live: "You're live! Contractors nearby can now find your business.",
+  later: "Saved. Your profile stays private until you go live.",
+};
+
+export default async function HomePage({ searchParams }: { searchParams: Promise<{ welcome?: string }> }) {
+  const [{ user, organization, details, snapshot, next }, params] = await Promise.all([
+    loadOnboarding("/dashboard"),
+    searchParams,
+  ]);
   const firstName = displayNameOf(user).split(" ")[0];
+  const publicUrl = details ? `${getPublicEnv().NEXT_PUBLIC_SITE_URL}/c/${details.slug}` : null;
+  const strength = snapshot ? profileStrength(snapshot) : null;
+  const canEdit = organization?.role !== "member";
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="font-serif text-3xl font-semibold tracking-tight">Welcome, {firstName}</h1>
-        <p className="text-muted-foreground">
-          {organization ? `You're managing ${organization.name}.` : "Let's get your business on Paradise."}
-        </p>
-      </div>
+    <div className="mx-auto flex max-w-3xl flex-col gap-6">
+      <header className="flex flex-col gap-1">
+        <h1 className="font-serif text-3xl font-semibold tracking-tight">Hi, {firstName}</h1>
+        <p className="text-muted-foreground">{details ? details.name : "Let's get your business on Paradise."}</p>
+      </header>
 
-      <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-        <Card>
+      <FormAlert message={params.welcome ? WELCOME[params.welcome] : undefined} />
+
+      {next !== "done" && canEdit ? (
+        <Card className="border-primary/30 bg-primary/5">
           <CardHeader>
-            <CardTitle className="text-lg">Getting started</CardTitle>
+            <p className="text-sm font-medium text-brass">
+              Step {stepIndex(next) + 1} of {ONBOARDING_STEPS.length}
+            </p>
+            <CardTitle className="text-xl">
+              {next === "business" ? "Set up your business" : next === "trade" ? "Tell us your trade" : "Go live"}
+            </CardTitle>
             <CardDescription>
-              {nextStep ? "A few steps and you'll be visible to contractors nearby." : "You're all set — your profile is live."}
+              {next === "publish"
+                ? "Your profile is ready. Go live so contractors nearby can find you."
+                : "A couple of quick questions and contractors nearby can find you."}
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ol className="flex flex-col gap-3">
-              {checklist.map((item) => (
-                <li key={item.label} className="flex items-center gap-3">
-                  {item.done ? (
-                    <CheckCircle2 className="size-5 shrink-0 text-forest-700 dark:text-forest-100" aria-label="Done" />
-                  ) : (
-                    <Circle className="size-5 shrink-0 text-muted-foreground" aria-label="To do" />
-                  )}
-                  <span className={item.done ? "text-muted-foreground line-through" : ""}>{item.label}</span>
-                </li>
-              ))}
-            </ol>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              {nextStep?.href ? (
-                <Button asChild>
-                  <Link href={nextStep.href}>
-                    {nextStep.label}
-                    <ArrowRight aria-hidden />
-                  </Link>
-                </Button>
-              ) : null}
-              {organization && profile ? (
-                <Button asChild variant="outline">
-                  <Link href={`/c/${organization.slug}`}>View your public page</Link>
-                </Button>
-              ) : null}
-            </div>
+            <Button asChild size="lg">
+              <Link href={ONBOARDING_STEPS[stepIndex(next)]!.path}>
+                {next === "publish" ? "Preview and go live" : "Continue setup"}
+                <ArrowRight aria-hidden />
+              </Link>
+            </Button>
           </CardContent>
         </Card>
+      ) : null}
 
-        <Card className="border-dashed">
+      {next === "done" && publicUrl ? (
+        <Card>
           <CardHeader>
-            <Handshake className="size-6 text-brass" aria-hidden />
-            <CardTitle className="text-lg">Paradise Exchange is coming</CardTitle>
-            <CardDescription>
-              Soon you&apos;ll be able to post requests for equipment, labor, materials and subcontractors — and make offers
-              on what others need. Finish your profile now so you&apos;re ready.
-            </CardDescription>
+            <div className="flex items-center gap-2 text-sm font-medium text-forest-700 dark:text-forest-100">
+              <CheckCircle2 className="size-4" aria-hidden />
+              You&apos;re live
+            </div>
+            <CardTitle className="text-xl">Share your Paradise page</CardTitle>
+            <CardDescription>Send it to customers and other contractors — it works like a business card.</CardDescription>
           </CardHeader>
+          <CardContent className="flex flex-col gap-3 sm:flex-row">
+            <CopyLinkButton url={publicUrl} />
+            <Button asChild variant="ghost">
+              <Link href={`/c/${details!.slug}`}>
+                <ExternalLink aria-hidden />
+                View your page
+              </Link>
+            </Button>
+          </CardContent>
         </Card>
-      </div>
+      ) : null}
+
+      {strength && canEdit && strength.missing.length > 0 && next !== "business" && next !== "trade" ? (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between gap-3">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Sparkles className="size-5 text-brass" aria-hidden />
+                Strengthen your profile
+              </CardTitle>
+              <span className="text-sm font-semibold tabular-nums">{strength.percent}%</span>
+            </div>
+            <div
+              className="h-2 overflow-hidden rounded-full bg-muted"
+              role="progressbar"
+              aria-label="Profile completeness"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={strength.percent}
+            >
+              <div className="h-full rounded-full bg-primary" style={{ width: `${strength.percent}%` }} />
+            </div>
+            <CardDescription>Contractors trust complete profiles. Each takes a few seconds.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="flex flex-col divide-y rounded-lg border">
+              {strength.missing.slice(0, 3).map((item) => (
+                <li key={item.key}>
+                  <Link
+                    href={`/profile#${item.key}`}
+                    className="flex min-h-12 items-center justify-between gap-3 px-4 text-sm hover:bg-muted"
+                  >
+                    {item.label}
+                    <ArrowRight className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      <Card className="border-dashed">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Inbox className="size-5 text-brass" aria-hidden />
+            Requests are coming soon
+          </CardTitle>
+          <CardDescription>
+            Soon you&apos;ll see equipment, labor and subcontracting requests from contractors near you — and post
+            your own.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button asChild variant="outline">
+            <Link href="/requests">
+              <PartyPopper aria-hidden />
+              See what&apos;s coming
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -15,6 +15,14 @@ export function slugify(name: string): string {
     .replace(/-+$/g, "");
 }
 
+/** Web-address candidates for a new business: name, then name + town, then numbered. */
+export function slugCandidates(name: string, town?: string): string[] {
+  const base = slugify(name) || "business";
+  const withTown = town ? slugify(`${name} ${town}`) : "";
+  const numbered = [2, 3, 4, 5].map((n) => `${base.slice(0, 60)}-${n}`);
+  return [...new Set([base, withTown, ...numbered].filter((s) => s.length >= 2))];
+}
+
 export const organizationSlugSchema = z
   .string()
   .trim()

@@ -5,6 +5,22 @@ assigned at first release.
 
 ## [Unreleased]
 
+### Changed — 2026-11-02, contractor experience: onboarding and navigation
+
+- **3-step onboarding** with a progress bar: `/onboarding/business` (name, town, phone; web address chosen
+  automatically) → `/onboarding/trade` (main trade + other trades as chips, travel radius) → `/onboarding/publish`
+  (live preview, "Go live" or "finish later"). `/onboarding` resumes at the first unfinished step; steps can't be skipped.
+- **Tab navigation**: bottom tab bar on phones, tabs in the header on desktop — Home, Requests, My business.
+- **Home** is now action cards: resume setup, "You're live" with copy-link/share, "Strengthen your profile"
+  (completeness % and the next missing details, each linking straight into the field), Exchange teaser.
+- **Requests** tab: explains what's coming (Milestone 3).
+- **My business** (`/profile`): plain wording (Live/Hidden, "Save and go live"); headline no longer required to go live.
+- Plain-language errors on onboarding; dark-mode contrast fix for success banners.
+- Fixes found in the preview walkthrough: (1) a per-request cache returned stale data inside a server action, and
+  (2) server-action `redirect()` from onboarding landed on a stale cached `/` on the Workers runtime. Onboarding and
+  profile actions now return `redirectTo` and the browser navigates (`useFormAction`).
+- Tests: 65 unit/component, 26 e2e. Deployed as `856b099f`.
+
 ### Changed — 2026-11-02, 6-digit codes
 
 - Supabase "Email OTP length" 8 → 6 (owner asked for 4; Supabase's minimum is 6).

@@ -18,6 +18,10 @@
 - Server Components by default; add `"use client"` only where needed (state, effects, browser APIs).
 - Mutations via Server Actions or route handlers that authenticate, validate, authorize, then call Supabase.
 - Create Supabase clients inside the request (never at module scope).
+- Forms use `useFormAction` (keeps input on validation errors). After a successful write, actions return
+  `{ redirectTo }` rather than calling `redirect()`: on the Workers runtime a server-action redirect into a page
+  that depends on the just-written data proved unreliable. Inside server actions, read data uncached
+  (e.g. `getActiveOrganization(id, { fresh: true })`) — the per-request `cache()` would return pre-write values.
 
 ## Workers compatibility
 

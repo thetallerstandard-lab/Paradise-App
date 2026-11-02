@@ -10,6 +10,13 @@ _Last updated: 2026-11-02 (Milestone 2 session)._
   Workers preview. A real sign-up on production (real inbox) is the remaining check.
   The contractor map is deferred. See [milestones/MILESTONE_02_NETWORK.md](milestones/MILESTONE_02_NETWORK.md).
 
+## Update — 2026-11-02, contractor experience rework (live, version `856b099f`)
+
+3-step onboarding (business → trade → go live), tab navigation (Home / Requests / My business), action-card
+Home with profile completeness, Requests "coming soon" tab. Verified end to end on the Workers preview at phone
+and desktop sizes with a temporary test user (deleted afterwards); production e2e 26/26.
+See [CHANGELOG](CHANGELOG.md) and [product/USER_JOURNEYS.md](product/USER_JOURNEYS.md).
+
 ## Update — 2026-11-02, custom domain
 
 - **https://paradisetrades.com** is live (Worker version `d8b5dbfb-33a4-425c-b709-5dabf3027d41`); `www` → 308 to apex;

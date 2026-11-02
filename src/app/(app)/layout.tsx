@@ -1,9 +1,11 @@
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 
+import { BottomTabs, TopTabs } from "@/components/app/app-nav";
 import { Wordmark } from "@/components/brand/wordmark";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
-import { displayNameOf, requireUser } from "@/modules/identity/server";
+import { requireUser } from "@/modules/identity/server";
 import { getActiveOrganization } from "@/modules/organizations/server";
 
 // Every page in this group is per-user; never prerender.
@@ -15,42 +17,31 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <header className="border-b bg-background">
+      <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
         <Container className="flex h-16 items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-4">
-            <Link href="/dashboard" aria-label="Dashboard" className="rounded-md">
+          <div className="flex min-w-0 items-center gap-6">
+            <Link href="/dashboard" aria-label="Paradise home" className="rounded-md">
               <Wordmark />
             </Link>
-            {organization ? (
-              <span className="hidden truncate text-sm text-muted-foreground sm:inline">{organization.name}</span>
-            ) : null}
+            <TopTabs />
           </div>
-          <form action="/auth/sign-out" method="post">
-            <Button type="submit" variant="ghost" size="sm">
-              Sign out
-            </Button>
-          </form>
-        </Container>
-        <Container>
-          <nav aria-label="App" className="-mb-px flex gap-4 overflow-x-auto text-sm">
-            <AppNavLink href="/dashboard">Dashboard</AppNavLink>
-            {organization ? <AppNavLink href="/profile">Business profile</AppNavLink> : <AppNavLink href="/onboarding">Set up business</AppNavLink>}
-            {organization ? <AppNavLink href={`/c/${organization.slug}`}>Public page</AppNavLink> : null}
-          </nav>
+          <div className="flex min-w-0 items-center gap-2">
+            {organization ? (
+              <span className="hidden max-w-48 truncate text-sm text-muted-foreground lg:inline">{organization.name}</span>
+            ) : null}
+            <form action="/auth/sign-out" method="post">
+              <Button type="submit" variant="ghost" size="sm" aria-label="Sign out">
+                <LogOut aria-hidden />
+                <span className="hidden sm:inline">Sign out</span>
+              </Button>
+            </form>
+          </div>
         </Container>
       </header>
-      <main className="flex-1 py-8 sm:py-12">
+      <main className="flex-1 pt-6 pb-28 sm:pt-10 md:pb-12">
         <Container>{children}</Container>
       </main>
-      <footer className="border-t py-6 text-center text-xs text-muted-foreground">Signed in as {displayNameOf(user)}</footer>
+      <BottomTabs />
     </div>
-  );
-}
-
-function AppNavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <Link href={href} className="border-b-2 border-transparent py-3 whitespace-nowrap text-muted-foreground hover:border-border hover:text-foreground">
-      {children}
-    </Link>
   );
 }

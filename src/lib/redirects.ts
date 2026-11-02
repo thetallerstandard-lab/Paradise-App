@@ -11,7 +11,7 @@ export function safeNextPath(raw: string | null | undefined, fallback = "/dashbo
 }
 
 /** Routes that need a signed-in user. Kept here so middleware and tests share it. */
-export const PROTECTED_PREFIXES = ["/dashboard", "/onboarding", "/profile"] as const;
+export const PROTECTED_PREFIXES = ["/dashboard", "/onboarding", "/profile", "/requests"] as const;
 
 /** Auth pages a signed-in user should skip. */
 export const GUEST_ONLY_PATHS = ["/sign-in", "/sign-up"] as const;

@@ -9,6 +9,13 @@ test("protected pages send visitors to sign-in and remember where they were goin
   await expect(page.getByRole("heading", { name: "Welcome back" })).toBeVisible();
 });
 
+for (const path of ["/requests", "/onboarding/trade"]) {
+  test(`${path} requires sign-in`, async ({ page }) => {
+    await page.goto(path);
+    await expect(page).toHaveURL(new RegExp(`/sign-in\\?next=${encodeURIComponent(path)}$`));
+  });
+}
+
 test("sign-up form shows validation errors without losing input", async ({ page }) => {
   await page.goto("/sign-up");
   await page.getByLabel("Your name").fill("Test Contractor");

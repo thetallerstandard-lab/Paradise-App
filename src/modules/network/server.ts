@@ -4,7 +4,7 @@ import { cache } from "react";
 
 import { createClient } from "@/lib/supabase/server";
 import type { ContractorProfileForm } from "@/modules/network/schemas";
-import { findTown, milesToMeters } from "@/modules/network/towns";
+import { findTown, metersToMiles, milesToMeters } from "@/modules/network/towns";
 
 export const listTradeCategories = cache(async () => {
   const supabase = await createClient();
@@ -49,10 +49,42 @@ export async function getProfileForEditing(organizationId: string) {
 
 export type SaveProfileResult = { ok: true } | { ok: false; message: string };
 
+/** Everything save_contractor_profile writes. Main trade may be unset mid-onboarding. */
+export type ProfileValues = Omit<ContractorProfileForm, "primaryTradeId"> & { primaryTradeId?: string };
+
+type EditableProfile = NonNullable<Awaited<ReturnType<typeof getProfileForEditing>>>;
+
+function toProfileValues(profile: EditableProfile | null): ProfileValues {
+  return {
+    headline: profile?.headline ?? undefined,
+    bio: profile?.bio ?? undefined,
+    yearsInBusiness: profile?.years_in_business ?? undefined,
+    licenseNumber: profile?.license_number ?? undefined,
+    isInsured: profile?.is_insured ?? false,
+    baseTown: profile?.base_town ?? undefined,
+    serviceRadiusMiles: profile?.serviceRadiusMeters ? metersToMiles(profile.serviceRadiusMeters) : 25,
+    primaryTradeId: profile?.primaryTradeId ?? undefined,
+    tradeIds: profile?.tradeIds ?? [],
+    publish: profile?.visibility === "published",
+  };
+}
+
+/**
+ * Changes only the given fields. The RPC overwrites every column, so this
+ * reads the current profile first and merges.
+ */
+export async function updateContractorProfile(
+  organizationId: string,
+  patch: Partial<ProfileValues>,
+): Promise<SaveProfileResult> {
+  const current = toProfileValues(await getProfileForEditing(organizationId));
+  return saveContractorProfile(organizationId, { ...current, ...patch });
+}
+
 /** Saves profile, trades and primary service area atomically (RLS-checked RPC). */
 export async function saveContractorProfile(
   organizationId: string,
-  form: ContractorProfileForm,
+  form: ProfileValues,
 ): Promise<SaveProfileResult> {
   const town = findTown(form.baseTown);
   const supabase = await createClient();

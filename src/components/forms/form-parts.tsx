@@ -48,7 +48,9 @@ export function FormAlert({ error, message }: { error?: string; message?: string
       role={isError ? "alert" : "status"}
       className={cn(
         "flex items-start gap-2 rounded-md border px-3 py-2 text-sm",
-        isError ? "border-destructive/40 bg-destructive/5 text-destructive" : "border-forest-700/30 bg-forest-100/60 text-foreground",
+        isError
+          ? "border-destructive/40 bg-destructive/5 text-destructive"
+          : "border-forest-700/30 bg-forest-100/60 text-foreground dark:border-forest-700 dark:bg-forest-800",
       )}
     >
       <Icon className="mt-0.5 size-4 shrink-0" aria-hidden />

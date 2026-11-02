@@ -11,11 +11,11 @@ import { getActiveOrganization } from "@/modules/organizations/server";
 
 import { ProfileForm } from "./profile-form";
 
-export const metadata: Metadata = { title: "Business profile" };
+export const metadata: Metadata = { title: "My business" };
 
 const SAVED_MESSAGES: Record<string, string> = {
-  published: "Saved and published. Your profile is live.",
-  draft: "Saved as a draft. Only your business can see it.",
+  published: "Saved. Your profile is live.",
+  draft: "Saved. Your profile is hidden until you go live.",
 };
 
 export default async function ProfilePage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
@@ -34,18 +34,22 @@ export default async function ProfilePage({ searchParams }: { searchParams: Prom
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
       <div className="flex flex-col gap-2">
-        {params.welcome ? <p className="text-sm font-medium text-brass">Step 2 of 2</p> : null}
         <div className="flex flex-wrap items-center gap-3">
-          <h1 className="font-serif text-3xl font-semibold tracking-tight">Business profile</h1>
-          <Badge variant={isPublished ? "default" : "secondary"}>{isPublished ? "Published" : "Draft"}</Badge>
+          <h1 className="font-serif text-3xl font-semibold tracking-tight">{organization.name}</h1>
+          <Badge variant={isPublished ? "default" : "secondary"}>{isPublished ? "Live" : "Hidden"}</Badge>
         </div>
         <p className="text-muted-foreground">
-          This is what contractors see on{" "}
+          Everything here appears on{" "}
           <Link href={`/c/${organization.slug}`} className="underline underline-offset-4">
             your public page
           </Link>
-          . Only an approximate location is shown — the town you choose.
+          , except your exact location — we only show your town.
         </p>
+        {canEdit ? (
+          <Link href="/onboarding/business" className="text-sm underline underline-offset-4">
+            Change business name or phone
+          </Link>
+        ) : null}
       </div>
 
       <FormAlert message={params.saved ? SAVED_MESSAGES[params.saved] : undefined} />

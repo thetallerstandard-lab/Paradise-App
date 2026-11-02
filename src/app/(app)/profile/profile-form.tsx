@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Field, FieldError, FormAlert, SubmitButton } from "@/components/forms/form-parts";
 import { useFormAction } from "@/components/forms/use-form-action";
@@ -31,6 +31,16 @@ export function ProfileForm({ trades, towns, initial }: { trades: Trade[]; towns
   const { state, onSubmit, isPending } = useFormAction(saveProfileAction);
   const [primaryTradeId, setPrimaryTradeId] = useState(initial.primaryTradeId);
   const errors = state.fieldErrors;
+
+  // Links from the Home checklist (e.g. /profile#headline) land in the field, ready to type.
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    const field = id ? document.getElementById(id) : null;
+    if (field instanceof HTMLElement) {
+      field.scrollIntoView({ block: "center" });
+      field.focus({ preventScroll: true });
+    }
+  }, []);
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-6" noValidate>
@@ -78,7 +88,7 @@ export function ProfileForm({ trades, towns, initial }: { trades: Trade[]; towns
             </div>
             <FieldError id="tradeIds-error" messages={errors?.tradeIds} />
           </fieldset>
-          <Field label="Headline" htmlFor="headline" hint="One line, e.g. “Standing-seam metal roofs and repairs”." errors={errors?.headline}>
+          <Field label="Headline (optional)" htmlFor="headline" hint="One line, e.g. “Standing-seam metal roofs and repairs”." errors={errors?.headline}>
             <Input id="headline" name="headline" maxLength={160} defaultValue={initial.headline} />
           </Field>
           <Field label="About your business (optional)" htmlFor="bio" errors={errors?.bio}>
@@ -128,7 +138,7 @@ export function ProfileForm({ trades, towns, initial }: { trades: Trade[]; towns
             <Input id="licenseNumber" name="licenseNumber" maxLength={64} defaultValue={initial.licenseNumber} />
           </Field>
           <label className="flex min-h-10 items-center gap-2 text-sm sm:col-span-2">
-            <input type="checkbox" name="isInsured" defaultChecked={initial.isInsured} className="size-4 accent-[var(--primary)]" />
+            <input id="isInsured" type="checkbox" name="isInsured" defaultChecked={initial.isInsured} className="size-4 accent-[var(--primary)]" />
             My business carries liability insurance
           </label>
         </CardContent>
@@ -136,10 +146,10 @@ export function ProfileForm({ trades, towns, initial }: { trades: Trade[]; towns
 
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
         <SubmitButton pending={isPending} name="intent" value="draft" variant="outline" pendingLabel="Saving…">
-          {initial.isPublished ? "Unpublish and save draft" : "Save draft"}
+          {initial.isPublished ? "Save and hide my profile" : "Save (keep hidden)"}
         </SubmitButton>
         <SubmitButton pending={isPending} name="intent" value="publish" pendingLabel="Saving…">
-          {initial.isPublished ? "Save changes" : "Save and publish"}
+          {initial.isPublished ? "Save changes" : "Save and go live"}
         </SubmitButton>
       </div>
     </form>

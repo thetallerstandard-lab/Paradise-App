@@ -127,4 +127,8 @@
   body {
     @apply bg-background text-foreground antialiased;
   }
+  /* Keep anchor targets (e.g. /profile#headline) clear of the sticky header. */
+  [id] {
+    scroll-margin-top: 6rem;
+  }
 }

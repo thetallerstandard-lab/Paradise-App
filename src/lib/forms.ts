@@ -5,6 +5,12 @@ export type FormState = {
   error?: string;
   message?: string;
   fieldErrors?: Record<string, string[] | undefined>;
+  /**
+   * Where the browser should go after a successful action. Used instead of a
+   * server-side redirect() where the next page depends on data the action just
+   * wrote: a client navigation always renders it in a fresh request.
+   */
+  redirectTo?: string;
 };
 
 export const initialFormState: FormState = {};
