@@ -5,6 +5,16 @@ assigned at first release.
 
 ## [Unreleased]
 
+### Added — 2026-11-02, Supabase connected
+
+- Supabase project `iaruniafwipktocripud` (us-east-1): initial schema applied, trade categories seeded.
+- Migration `harden_functions_and_policies`: helpers moved to `private` schema, trigger functions not
+  API-callable, FK indexes, per-command write policies. Security advisor now clean.
+- `supabase/tests/rls_smoke.sql` (13 checks, rolled back) — passes.
+- `src/types/database.ts` regenerated from the live project.
+- `/api/health/db` readiness endpoint; verified from the Workers preview.
+- Wrangler logged in to the Cloudflare account.
+
 ### Verified — 2026-11-02
 
 - Installed dependencies (lockfile committed with the first commit). Typecheck, lint, 19 unit/component tests,

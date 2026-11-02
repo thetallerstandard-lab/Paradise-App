@@ -19,7 +19,8 @@ Authoritative rules for Claude Code sessions in this repository.
 5. **Keep TypeScript strict.** No `any`, no `@ts-ignore`, no loosening `tsconfig.json`.
    Validate external input with Zod.
 6. **Secure by default, organization-scoped.** Business data belongs to an organization.
-   Every table has RLS enabled with policies using `is_org_member` / `has_org_role`.
+   Every table has RLS enabled with policies using `private.is_org_member` / `private.has_org_role`.
+   After any schema change: run the Supabase advisors, re-run `supabase/tests/rls_smoke.sql`, regenerate types.
    Authorize on the server; the UI hiding a button is not authorization.
    `src/lib/supabase/admin.ts` (bypasses RLS) is server-only and needs an explicit authorization check at each call site.
    Never expose secrets to the client or prefix them with `NEXT_PUBLIC_`.

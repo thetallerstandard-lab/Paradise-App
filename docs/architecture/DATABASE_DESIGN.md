@@ -1,8 +1,8 @@
 # Database design
 
-**Status: Implemented as SQL, not applied.** Source:
-`supabase/migrations/20261102000000_initial_schema.sql`. It has never been run
-against Postgres, so syntax and policy behaviour are unverified.
+**Status: Applied and tested** on Supabase project `iaruniafwipktocripud` (2026-11-02).
+Migrations: `20261102000000_initial_schema.sql`, `20261102010000_harden_functions_and_policies.sql`.
+Behaviour checked by `supabase/tests/rls_smoke.sql` (13/13).
 
 ## Conventions
 
@@ -11,6 +11,8 @@ against Postgres, so syntax and policy behaviour are unverified.
 - Enums for closed sets of states. Text length limits enforced by `CHECK`.
 - PostGIS `geography(..., 4326)` for locations, with GiST indexes.
 - RLS enabled on every table. Functions are `SECURITY DEFINER` only when needed and always `set search_path = ''`.
+- Helper functions used by policies live in the **`private` schema** (not exposed by the Data API).
+  Trigger functions have `EXECUTE` revoked from API roles. One permissive policy per table/role/command.
 - Migrations are append-only; never edit one after it is applied.
 
 ## Entities
@@ -51,8 +53,8 @@ organizations 1─* resource_requests 1─* exchange_offers *─1 organizations 
 - No exact street addresses for contractors ([GEOSPATIAL.md](GEOSPATIAL.md)).
 - No CRM, billing or media tables.
 
-## Applying
+## Applying new migrations
 
-Once a Supabase project exists: `npx supabase link --project-ref <ref>` then
-`npx supabase db push`, then regenerate `src/types/database.ts`
-([../development/SETUP.md](../development/SETUP.md)). Policies: [AUTHORIZATION.md](AUTHORIZATION.md).
+Add a new timestamped file (never edit an applied one), then `npx supabase link --project-ref iaruniafwipktocripud`
+and `npx supabase db push`, run the Supabase advisors, re-run `supabase/tests/rls_smoke.sql`, and regenerate
+`src/types/database.ts` ([../development/SETUP.md](../development/SETUP.md)). Policies: [AUTHORIZATION.md](AUTHORIZATION.md).

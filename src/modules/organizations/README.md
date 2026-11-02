@@ -5,7 +5,7 @@ Contractor businesses and who belongs to them. Every business record in Paradise
 not by an individual user.
 
 - Tables: `organizations`, `organization_memberships` (roles: owner, admin, member).
-- Database helpers: `is_org_member(org_id)`, `has_org_role(org_id, roles)` used by RLS.
+- Database helpers: `private.is_org_member(org_id)`, `private.has_org_role(org_id, roles)` used by RLS.
 - Implemented: input validation schemas, slug helper (`schemas.ts`).
 - Planned (Milestone 2): create-organization flow, active-organization selection, invites.
 

@@ -1,6 +1,7 @@
 # Authorization
 
-**Status:** RLS policies **Implemented as SQL, not applied or tested**.
+**Status:** RLS policies **applied and tested** with `supabase/tests/rls_smoke.sql` (2026-11-02, 13/13).
+Helpers are `private.is_org_member(org_id)` and `private.has_org_role(org_id, roles)`.
 
 ## Model
 
@@ -36,12 +37,17 @@ The admin client bypasses layers 2–3; every use must do layer 1 explicitly.
 | `resource_requests` | Signed-in users see `open`; members see all of theirs | Members create; creator or owners/admins update |
 | `exchange_offers` | Members of the offering or requesting org | Offering members create; updates checked by trigger |
 
-## Must verify when the migration is first applied
+## Verified (rls_smoke.sql)
 
-- Organization insert with `.select()` returns the new row (owner membership is created by an `AFTER INSERT` trigger).
-- `enforce_membership_rules` blocks changing your own role and reserves granting/revoking `owner` for owners.
-  Confirm it, and that the creator's first owner membership still succeeds.
-- An organization can currently lose its last owner if an owner removes themselves; add a guard before invites ship.
-- Write pgTAP or integration tests for each policy before Milestone 3 ships.
+Profiles auto-created on sign-up; organization creator becomes owner; no offers on own request;
+other orgs see open requests but not your roster; offering org cannot accept its own offer; plain
+members cannot accept offers or promote themselves; owners can accept (sets `responded_at`);
+anonymous users see trade categories but no requests.
+
+## Still to verify / do
+
+- Organization insert with `.select()` returning the new row via the API (smoke test inserts without RETURNING).
+- An organization can lose its last owner if an owner removes themselves; add a guard before invites ship.
+- Convert the smoke test to pgTAP and run it in CI before Milestone 3 ships.
 
 Related: [SECURITY.md](SECURITY.md), [DATABASE_DESIGN.md](DATABASE_DESIGN.md).

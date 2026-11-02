@@ -11,6 +11,7 @@ tests against `next dev` and 6 against the Workers preview. CI not yet run.
 | Component | Vitest + Testing Library | `tests/components` | `npm run test` |
 | End-to-end | Playwright (Pixel 7 + Desktop Chrome) | `tests/e2e` | `npm run test:e2e` |
 | Workers build | OpenNext | — | `npm run cf:build` |
+| Database (manual) | SQL smoke test, rolls back | `supabase/tests/rls_smoke.sql` | Supabase SQL editor |
 | Database (planned) | pgTAP via `supabase test db` | `supabase/tests` | — |
 
 `npm run check` = typecheck + lint + unit tests.
