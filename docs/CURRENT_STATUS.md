@@ -53,7 +53,7 @@ Playwright 1.64.1, TypeScript 5.9.3, ESLint 9.39.5.
 
 1. **No Supabase project** — create one, then apply the migration ([development/NEXT_STEPS.md](development/NEXT_STEPS.md)).
 2. **Wrangler not logged in** — owner runs `npx wrangler login` (browser OAuth).
-3. **No Git commit yet** — repository initialized on `main`; nothing committed. No GitHub remote.
+3. **No GitHub remote** — initial commit `220f4de` exists locally on `main`; CI has never run.
 4. **No Mapbox token** (needed from Milestone 2).
 
 See also [development/KNOWN_ISSUES.md](development/KNOWN_ISSUES.md).

@@ -4,7 +4,7 @@
 
 Local verification passed on 2026-11-02 ([CURRENT_STATUS.md](../CURRENT_STATUS.md)). Remaining:
 
-1. **Initial Git commit**, then create the GitHub repository, push, and confirm CI passes.
+1. Create the GitHub repository, push `main` (initial commit done), and confirm CI passes.
 2. **Supabase project**: create it, fill `.env.local` / `.dev.vars`, `npx supabase link` + `npx supabase db push`,
    run `supabase/seed.sql`, regenerate `src/types/database.ts`, and confirm the middleware session refresh
    works under both `npm run dev` and `npm run preview`.
