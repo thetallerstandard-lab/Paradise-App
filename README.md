@@ -7,7 +7,7 @@ launching in Lancaster County, Pennsylvania. The first release covers
 **Paradise Network** (profiles, map, trust) and **Paradise Exchange** (resource
 requests and point-denominated offers).
 
-> **Status:** Live at https://paradise.paradise-contractors.workers.dev — landing page, accounts, contractor
+> **Status:** Live at https://paradisetrades.com — landing page, accounts, contractor
 > onboarding and public profiles (Milestone 2). See [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md).
 > See [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md).
 

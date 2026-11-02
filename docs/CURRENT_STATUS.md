@@ -10,6 +10,15 @@ _Last updated: 2026-11-02 (Milestone 2 session)._
   Workers preview. A real sign-up on production (real inbox) is the remaining check.
   The contractor map is deferred. See [milestones/MILESTONE_02_NETWORK.md](milestones/MILESTONE_02_NETWORK.md).
 
+## Update — 2026-11-02, custom domain
+
+- **https://paradisetrades.com** is live (Worker version `d8b5dbfb-33a4-425c-b709-5dabf3027d41`); `www` → 308 to apex;
+  workers.dev still works. Production e2e: 22/22 pass on the new domain.
+- Supabase Auth Site URL is now `https://paradisetrades.com`; redirect URLs: paradisetrades.com, workers.dev,
+  localhost:3000, localhost:8787.
+- Code-based email verification (`/verify-email`) is deployed. Emails still contain a link (default Supabase
+  template, which also works) until custom SMTP is connected and the template switched.
+
 ## Environments
 
 | Service | Identifier | State |

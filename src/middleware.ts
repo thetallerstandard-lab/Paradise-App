@@ -1,9 +1,19 @@
-import type { NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 import { isGuestOnlyPath, isProtectedPath } from "@/lib/redirects";
 import { redirectWithCookies, updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  // One canonical host: www.paradisetrades.com -> paradisetrades.com.
+  const host = request.headers.get("host") ?? "";
+  if (host.startsWith("www.")) {
+    const url = request.nextUrl.clone();
+    url.host = host.slice(4);
+    url.port = "";
+    url.protocol = "https:";
+    return NextResponse.redirect(url, 308);
+  }
+
   const { response, user } = await updateSession(request);
   const { pathname, search } = request.nextUrl;
 

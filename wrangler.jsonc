@@ -19,6 +19,13 @@
       "service": "paradise"
     }
   ],
+  // Custom domains (Cloudflare creates DNS records and certificates on deploy).
+  // www redirects to the apex in src/middleware.ts. Keep workers.dev as a fallback.
+  "routes": [
+    { "pattern": "paradisetrades.com", "custom_domain": true },
+    { "pattern": "www.paradisetrades.com", "custom_domain": true }
+  ],
+  "workers_dev": true,
   "observability": {
     "enabled": true
   },

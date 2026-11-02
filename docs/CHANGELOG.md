@@ -5,7 +5,13 @@ assigned at first release.
 
 ## [Unreleased]
 
-### Changed — 2026-11-02, code-based email verification (not deployed)
+### Released — 2026-11-02, paradisetrades.com
+
+- Custom domains `paradisetrades.com` and `www.paradisetrades.com` on the Worker (`wrangler.jsonc` routes);
+  www → apex 308 redirect in middleware. Supabase Site URL switched. Version `d8b5dbfb`.
+- Code-based verification page deployed with this release.
+
+### Changed — 2026-11-02, code-based email verification
 
 - `/check-email` replaced by `/verify-email`: users type the emailed code (`verifyOtp`, type `email`);
   "Send a new code" (`resend`, type `signup`). Unconfirmed sign-ins are routed there.

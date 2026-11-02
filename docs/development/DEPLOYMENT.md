@@ -9,7 +9,7 @@ Production deploys require explicit approval from the project owner.
 | --- | --- | --- | --- |
 | Local dev | `next dev` (Node.js) | Supabase (hosted dev project or local stack) | http://localhost:3000 |
 | Local Workers preview | `wrangler dev` via `npm run preview` (workerd) | same as dev | http://localhost:8787 |
-| Production | Cloudflare Worker `paradise` | Supabase project `iaruniafwipktocripud` | https://paradise.paradise-contractors.workers.dev → custom domain (TBD) |
+| Production | Cloudflare Worker `paradise` | Supabase project `iaruniafwipktocripud` | https://paradisetrades.com (www redirects; workers.dev fallback) |
 | Staging (planned) | Worker `paradise-staging` (wrangler `env.staging`) | Supabase staging project | TBD |
 
 ## Pipeline
