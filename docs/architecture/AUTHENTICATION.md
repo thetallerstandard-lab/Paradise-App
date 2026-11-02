@@ -8,8 +8,9 @@ verified end to end. Not deployed.
 
 | Route | Purpose |
 | --- | --- |
-| `/sign-up` | Email + password + name; `signUp` with `emailRedirectTo=/auth/callback?next=/onboarding` → `/check-email` |
-| `/sign-in` | `signInWithPassword`; honours a same-origin `next` (`safeNextPath`) |
+| `/sign-up` | Email + password + name; `signUp` (keeps `emailRedirectTo=/auth/callback?next=/onboarding` as a fallback) → `/verify-email?email=…` |
+| `/verify-email` | **Code-based confirmation.** User enters the emailed code (8 digits, 1-hour expiry; form accepts 6–10 digits, spaces/dashes stripped) → `verifyOtp({ email, token, type: "email" })` → `/onboarding`. "Send a new code" calls `resend({ type: "signup" })` with a non-revealing reply. |
+| `/sign-in` | `signInWithPassword`; honours a same-origin `next` (`safeNextPath`); unconfirmed accounts are sent to `/verify-email` |
 | `/forgot-password` | `resetPasswordForEmail` → link to `/auth/callback?next=/reset-password`; same reply whether or not the account exists |
 | `/reset-password` | Signed-in (via the link) user sets a new password |
 | `/auth/callback` | Exchanges `code` (PKCE) or verifies `token_hash`, then redirects to `next`; failures → `/sign-in?error=link` |
@@ -17,6 +18,18 @@ verified end to end. Not deployed.
 
 Middleware redirects anonymous users from `/dashboard`, `/onboarding`, `/profile` to `/sign-in?next=…`, and
 signed-in users from `/sign-in`, `/sign-up` to `/dashboard`. The `(app)` layout re-checks with `requireUser()`.
+
+**Email template (blocked):** for codes to arrive, Supabase's "Confirm sign up" template must contain
+`{{ .Token }}`. The default template contains only `{{ .ConfirmationURL }}`, and Supabase allows editing
+templates only after **custom SMTP** is configured. Until then users receive a link; the link still works via
+`/auth/callback`, and `/verify-email` tells them so. Template to use once SMTP is set:
+
+```html
+<h2>Your Paradise verification code</h2>
+<p>Enter this code to confirm your email address:</p>
+<p style="font-size:28px;font-weight:700;letter-spacing:6px">{{ .Token }}</p>
+<p>The code expires in one hour. If you didn't sign up for Paradise, you can ignore this email.</p>
+```
 
 **Supabase configuration required:** Auth → URL configuration → Site URL = production origin; redirect URLs for
 production, `http://localhost:3000/**`, `http://localhost:8787/**`. Custom SMTP before launch.

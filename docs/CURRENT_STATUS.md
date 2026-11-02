@@ -52,6 +52,9 @@ the deployed Worker (test accounts are only used on local hosts). Owner to do on
 
 ## Open items
 
+0. **Code-based email verification** — implemented and tested in the app (not deployed). Codes cannot be
+   emailed until custom SMTP is configured in Supabase (default templates are link-only and locked).
+
 1. **Real sign-up on production** with a real inbox (confirm link → onboarding → publish → public page).
 2. **Password reset** end to end with a real inbox.
 3. **Supabase built-in email** is rate-limited (a few emails/hour) and for testing only — configure custom SMTP before launch.

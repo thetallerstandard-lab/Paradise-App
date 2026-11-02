@@ -22,6 +22,25 @@ export const forgotPasswordInputSchema = z.object({
   email: emailSchema,
 });
 
+/**
+ * Email confirmation code. The project sends 8 digits (Supabase "Email OTP
+ * length"); accept 6–10 so changing that setting does not break the form.
+ * Spaces and dashes users paste from the email are stripped.
+ */
+export const verificationCodeSchema = z
+  .string()
+  .transform((v) => v.replace(/[\s-]/g, ""))
+  .pipe(z.string().regex(/^\d{6,10}$/, "Enter the code from your email"));
+
+export const verifyEmailInputSchema = z.object({
+  email: emailSchema,
+  code: verificationCodeSchema,
+});
+
+export const resendCodeInputSchema = z.object({
+  email: emailSchema,
+});
+
 export const resetPasswordInputSchema = z
   .object({
     password: passwordSchema,

@@ -5,6 +5,14 @@ assigned at first release.
 
 ## [Unreleased]
 
+### Changed — 2026-11-02, code-based email verification (not deployed)
+
+- `/check-email` replaced by `/verify-email`: users type the emailed code (`verifyOtp`, type `email`);
+  "Send a new code" (`resend`, type `signup`). Unconfirmed sign-ins are routed there.
+- Supabase "Confirm sign up" template still sends a link until custom SMTP is configured; the page
+  says the link also works.
+- Tests: 59 unit/component, 22 e2e.
+
 ### Released — 2026-11-02, Milestone 2 deploy
 
 - Worker version `5dfa87fa-0579-439b-97c7-5dd7585dd17e`. Supabase Auth Site URL and redirect URLs set.

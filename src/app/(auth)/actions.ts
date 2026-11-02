@@ -8,10 +8,18 @@ import { safeNextPath } from "@/lib/redirects";
 import { createClient } from "@/lib/supabase/server";
 import {
   forgotPasswordInputSchema,
+  resendCodeInputSchema,
   resetPasswordInputSchema,
   signInInputSchema,
   signUpInputSchema,
+  verifyEmailInputSchema,
 } from "@/modules/identity";
+
+function verifyEmailPath(email: string, notice?: "unconfirmed") {
+  const params = new URLSearchParams({ email });
+  if (notice) params.set("notice", notice);
+  return `/verify-email?${params.toString()}`;
+}
 
 function callbackUrl(next: string) {
   const { NEXT_PUBLIC_SITE_URL } = getPublicEnv();
@@ -45,9 +53,44 @@ export async function signUpAction(_prev: FormState, formData: FormData): Promis
   }
 
   // With email confirmation on, Supabase returns no session (and does not reveal
-  // whether the address was already registered).
+  // whether the address was already registered). The email carries a code.
   if (data.session) redirect("/onboarding");
-  redirect(`/check-email?email=${encodeURIComponent(parsed.data.email)}`);
+  redirect(verifyEmailPath(parsed.data.email));
+}
+
+export async function verifyEmailAction(_prev: FormState, formData: FormData): Promise<FormState> {
+  const parsed = verifyEmailInputSchema.safeParse({
+    email: formData.get("email"),
+    code: formData.get("code") ?? "",
+  });
+  if (!parsed.success) return { fieldErrors: fieldErrorsFrom(parsed.error) };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.verifyOtp({
+    email: parsed.data.email,
+    token: parsed.data.code,
+    type: "email",
+  });
+  if (error) {
+    if (error.code === "over_request_rate_limit") {
+      return { error: "Too many attempts. Wait a minute, then try again." };
+    }
+    return { fieldErrors: { code: ["That code is wrong or has expired. Check the latest email, or send a new code."] } };
+  }
+  redirect("/onboarding");
+}
+
+export async function resendCodeAction(_prev: FormState, formData: FormData): Promise<FormState> {
+  const parsed = resendCodeInputSchema.safeParse({ email: formData.get("email") });
+  if (!parsed.success) return { error: "Enter a valid email address first." };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resend({ type: "signup", email: parsed.data.email });
+  if (error && (error.code === "over_email_send_rate_limit" || error.status === 429)) {
+    return { error: "A code was sent recently. Wait a minute before asking for another." };
+  }
+  // Same reply whether or not the account exists or is already confirmed.
+  return { message: "If that account still needs confirming, a new code is on its way." };
 }
 
 export async function signInAction(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -61,7 +104,7 @@ export async function signInAction(_prev: FormState, formData: FormData): Promis
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
   if (error) {
     if (error.code === "email_not_confirmed") {
-      return { error: "Please confirm your email first — check your inbox for the link we sent." };
+      redirect(verifyEmailPath(parsed.data.email, "unconfirmed"));
     }
     return { error: "That email and password don't match. Try again or reset your password." };
   }

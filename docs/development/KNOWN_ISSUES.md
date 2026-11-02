@@ -5,7 +5,8 @@
 | 1 | OpenNext warns it is not fully compatible with Windows | Build, preview and deploy have all worked on Windows 11; future failures possible | Use WSL 2 or CI if a Windows-only failure appears |
 | 2 | npm 11 `allowScripts` pins exact `esbuild` and `workerd` versions | Upgrades may block their install scripts | `npm install-scripts approve esbuild workerd` after upgrades |
 | 3 | RLS/RPC smoke tests are manual SQL scripts, not in CI | Policy regressions not caught automatically | Convert to pgTAP before Milestone 3 |
-| 4 | Supabase built-in email: low rate limit, testing only | Sign-up/reset emails may be throttled or land in spam | Configure custom SMTP before launch |
+| 4 | Supabase built-in email: low rate limit, testing only, **templates not editable** | Sign-up emails contain a link, not the verification code the app now asks for (link still works) | Configure custom SMTP, then set the "Confirm sign up" template to `{{ .Token }}` (see AUTHENTICATION.md) |
+| 4b | Project folder is inside OneDrive | Next.js dev server can crash with `EINVAL readlink .next\...`; folders can stay locked after deletion | Delete `.next` and retry; long term, move the repo outside OneDrive (e.g. `C:\dev\paradise`) |
 | 5 | Confirmation and password-reset email links not verified end to end | Possible misconfiguration unnoticed | Real sign-up with a real inbox after setting Auth URL config and deploying |
 | 6 | CSP allows `'unsafe-inline'` scripts | Weaker XSS defence than a nonce-based CSP | Move to nonces (middleware) before adding third-party scripts (Mapbox) |
 | 7 | Marketing header is static and always shows "Sign in / Join" | Signed-in users see sign-in links on public pages (middleware sends them to the dashboard) | Acceptable; a client-side account menu could replace it later |

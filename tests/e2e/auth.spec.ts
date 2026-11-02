@@ -22,6 +22,24 @@ test("sign-up form shows validation errors without losing input", async ({ page 
   await expect(page.getByLabel("Email")).toHaveValue("not-an-email");
 });
 
+test("verify-email page rejects a malformed code without calling out", async ({ page }) => {
+  await page.goto("/verify-email?email=nobody%40paradise-e2e.test");
+  await expect(page.getByRole("heading", { name: "Verify your email" })).toBeVisible();
+  await expect(page.getByLabel("Email")).toHaveValue("nobody@paradise-e2e.test");
+  await page.getByLabel("Verification code").fill("12ab");
+  await page.getByRole("button", { name: "Verify email" }).click();
+  await expect(page.getByText("Enter the code from your email")).toBeVisible();
+});
+
+test("verify-email page rejects a wrong code", async ({ page }) => {
+  // verifyOtp never sends email, so a fake address is safe here.
+  await page.goto("/verify-email?email=nobody%40paradise-e2e.test");
+  await page.getByLabel("Verification code").fill("0000 0000");
+  await page.getByRole("button", { name: "Verify email" }).click();
+  await expect(page.getByText(/wrong or has expired|Too many attempts/)).toBeVisible();
+  await expect(page).toHaveURL(/\/verify-email/);
+});
+
 test("sign-in page links to password reset and sign-up", async ({ page }) => {
   await page.goto("/sign-in");
   await expect(page.getByRole("link", { name: "Forgot your password?" })).toHaveAttribute("href", "/forgot-password");

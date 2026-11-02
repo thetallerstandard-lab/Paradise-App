@@ -1,5 +1,13 @@
 # Next steps
 
+## Code-based email verification (in progress)
+
+App side done and tested (`/verify-email`), not deployed. Blocked on email:
+1. Owner chooses an email provider and connects it as custom SMTP in Supabase (Authentication → Emails → SMTP Settings).
+   A sending domain the owner controls is strongly recommended for deliverability.
+2. Set the "Confirm sign up" template to the code template in AUTHENTICATION.md.
+3. Deploy, then one real sign-up to confirm the code arrives and verifies.
+
 ## Close out Milestone 2
 
 Done 2026-11-02: Supabase Auth URL configuration, deploy (version `5dfa87fa`), production e2e green.
