@@ -5,7 +5,12 @@ assigned at first release.
 
 ## [Unreleased]
 
-### Added — 2026-11-02, Milestone 2 Network (not yet deployed)
+### Released — 2026-11-02, Milestone 2 deploy
+
+- Worker version `5dfa87fa-0579-439b-97c7-5dd7585dd17e`. Supabase Auth Site URL and redirect URLs set.
+- E2E selector fix: filter `role=alert` by text (Next.js route announcer also uses that role in production).
+
+### Added — 2026-11-02, Milestone 2 Network
 
 - Full landing page; route groups `(marketing)`, `(auth)`, `(app)`; global 404.
 - Email/password sign-up with confirmation, sign-in, POST sign-out, forgot/reset password, `/auth/callback`

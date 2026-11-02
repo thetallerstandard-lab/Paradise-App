@@ -31,7 +31,8 @@ test("sign-in page links to password reset and sign-up", async ({ page }) => {
 test("expired email links land on sign-in with an explanation", async ({ page }) => {
   await page.goto("/auth/callback?code=not-a-real-code&next=/dashboard");
   await expect(page).toHaveURL(/\/sign-in\?error=link/);
-  await expect(page.getByRole("alert")).toContainText("invalid or has expired");
+  // Production builds also render Next.js's empty route-announcer alert, so filter by text.
+  await expect(page.getByRole("alert").filter({ hasText: "invalid or has expired" })).toBeVisible();
 });
 
 test("unknown contractor profile returns 404", async ({ page }) => {

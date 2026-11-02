@@ -7,8 +7,8 @@ launching in Lancaster County, Pennsylvania. The first release covers
 **Paradise Network** (profiles, map, trust) and **Paradise Exchange** (resource
 requests and point-denominated offers).
 
-> **Status:** Milestone 1 deployed (https://paradise.paradise-contractors.workers.dev). Milestone 2 (landing page,
-> auth, onboarding, public profiles) built and tested locally; not yet deployed. See [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md).
+> **Status:** Live at https://paradise.paradise-contractors.workers.dev — landing page, accounts, contractor
+> onboarding and public profiles (Milestone 2). See [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md).
 > See [docs/CURRENT_STATUS.md](docs/CURRENT_STATUS.md).
 
 ## Stack

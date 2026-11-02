@@ -1,6 +1,7 @@
 # Milestone 2 — Network
 
-**Status: Implemented and tested locally (dev + Workers preview), not yet deployed.** 2026-11-02.
+**Status: Deployed** 2026-11-02 to https://paradise.paradise-contractors.workers.dev (version `5dfa87fa`).
+Pending: one real sign-up with a real inbox in production.
 Built from this document (no separate Prompt 2 spec). The contractor map is deferred to Milestone 2b.
 
 ## Delivered
@@ -28,6 +29,6 @@ Built from this document (no separate Prompt 2 spec). The contractor map is defe
 | --- | --- |
 | New contractor goes from landing page to published profile | ✅ on Workers preview (test user created confirmed via SQL; email confirmation link itself not exercised) |
 | Session persists across navigation on Workers preview | ✅ |
-| Session persists on deployed Worker | ⏳ after next deploy |
-| Unit, component, e2e and `cf:build` pass | ✅ locally; CI on push |
+| Session persists on deployed Worker | ⏳ owner's real sign-up (no test accounts on production) |
+| Unit, component, e2e and `cf:build` pass | ✅ locally and e2e against production |
 | Visible on the map | ⏳ Milestone 2b |

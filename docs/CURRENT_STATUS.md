@@ -5,16 +5,17 @@ _Last updated: 2026-11-02 (Milestone 2 session)._
 ## Summary
 
 - **Milestone 1 (Foundation): complete and deployed** to https://paradise.paradise-contractors.workers.dev.
-- **Milestone 2 (Network): implemented and tested locally**, including the full signed-in journey on the
-  Workers preview. **Not yet deployed** — production still serves the Milestone 1 placeholder.
+- **Milestone 2 (Network): deployed** 2026-11-02 (Worker version `5dfa87fa-0579-439b-97c7-5dd7585dd17e`).
+  Signed-out flows verified in production by the e2e suite; the full signed-in journey was verified on the
+  Workers preview. A real sign-up on production (real inbox) is the remaining check.
   The contractor map is deferred. See [milestones/MILESTONE_02_NETWORK.md](milestones/MILESTONE_02_NETWORK.md).
 
 ## Environments
 
 | Service | Identifier | State |
 | --- | --- | --- |
-| Supabase | project `paradise`, ref `iaruniafwipktocripud`, us-east-1 | 5 migrations applied. Auth URL configuration: see open items. |
-| Cloudflare | account `d871a8cd21f162e2dbd035a12ccea458`, subdomain `paradise-contractors` | Worker `paradise` version `e0af56b7` (Milestone 1 build) |
+| Supabase | project `paradise`, ref `iaruniafwipktocripud`, us-east-1 | 5 migrations applied. Auth Site URL = production; redirect URLs = production, localhost:3000, localhost:8787 |
+| Cloudflare | account `d871a8cd21f162e2dbd035a12ccea458`, subdomain `paradise-contractors` | Worker `paradise` version `5dfa87fa` (Milestone 2) |
 | GitHub | [thetallerstandard-lab/Paradise-App](https://github.com/thetallerstandard-lab/Paradise-App) (public) | `main` |
 
 ## Verification log — Milestone 2, 2026-11-02 (Windows 11, Node 26.13)
@@ -29,18 +30,21 @@ _Last updated: 2026-11-02 (Milestone 2 session)._
 | Migrations `onboarding`, `profile_rpc_defaults` | **Applied**; security advisor 0 findings |
 | `save_contractor_profile` + last-owner SQL test (rolled back) | **Pass** — 7/7 |
 | Test data cleanup | All app tables and `auth.users` back to 0 rows |
+| Deploy (owner-approved) | `NEXT_PUBLIC_SITE_URL=https://paradise.paradise-contractors.workers.dev npm run deploy` — 1.42 MiB gzip, 19 ms startup |
+| Production `/api/health/db` | `{"status":"ok","tradeCategories":12}` |
+| E2E vs production | **Pass** — 18 tests (after fixing an over-broad `role=alert` selector that matched Next's route announcer) |
 
-Not verified: sign-up confirmation email and password-reset email links end to end (the test user was
-created already-confirmed via SQL to avoid sending mail to a fake inbox); session on the deployed Worker.
+Not verified: sign-up confirmation and password-reset email links end to end, and a signed-in session on
+the deployed Worker (test accounts are only used on local hosts). Owner to do one real sign-up in production.
 
 ## Capability status
 
 | Area | Status |
 | --- | --- |
-| Landing page, public profile pages | Tested (not released) |
-| Sign-up / sign-in / sign-out / reset | Sign-in & sign-out tested; sign-up & reset implemented, email links unverified |
-| Onboarding, profile editor, dashboard | Tested (manual) |
-| Security headers | Tested |
+| Landing page, public profile pages | **Released** |
+| Sign-up / sign-in / sign-out / reset | **Released**; sign-in & sign-out tested on preview; email links unverified |
+| Onboarding, profile editor, dashboard | **Released**; tested on preview (manual) |
+| Security headers | **Released**, tested in production |
 | Contractor map | Planned (Milestone 2b) |
 | Exchange (requests/offers UI) | Planned (Milestone 3) |
 | Paradise Points ledger | Planned |
@@ -48,9 +52,8 @@ created already-confirmed via SQL to avoid sending mail to a fake inbox); sessio
 
 ## Open items
 
-1. **Supabase Auth URL configuration** — Site URL `https://paradise.paradise-contractors.workers.dev` and redirect
-   URLs must be set before real users sign up, or confirmation links point at localhost.
-2. **Deploy Milestone 2** — needs owner approval.
+1. **Real sign-up on production** with a real inbox (confirm link → onboarding → publish → public page).
+2. **Password reset** end to end with a real inbox.
 3. **Supabase built-in email** is rate-limited (a few emails/hour) and for testing only — configure custom SMTP before launch.
 4. **GitHub repository secrets** for `NEXT_PUBLIC_SUPABASE_*` not set (CI builds with placeholders).
 5. **Mapbox token** — needed for Milestone 2b.
