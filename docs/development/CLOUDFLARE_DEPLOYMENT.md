@@ -1,6 +1,7 @@
 # Cloudflare deployment
 
-**Status: build and local preview pass (2026-11-02); never deployed; Wrangler not logged in.** Architecture:
+**Status: deployed** to https://paradise.paradise-contractors.workers.dev on 2026-11-02
+(version `e0af56b7-a718-4781-9170-0367c59415d8`). Account workers.dev subdomain: `paradise-contractors`. Architecture:
 [CLOUDFLARE_ARCHITECTURE.md](../architecture/CLOUDFLARE_ARCHITECTURE.md).
 
 ## 1. Account setup
@@ -50,9 +51,23 @@ Check `/`, `/api/health`, and (from Milestone 2) sign-in/out with session persis
 
 ## 6. Deploy (requires approval)
 
-```bash
-npm run deploy          # build + upload + activate immediately
+`.env.local` takes precedence over `.env.production` in Next.js, and it contains
+`NEXT_PUBLIC_SITE_URL=http://localhost:3000`. Override it with a shell variable, which wins over all files:
+
+```powershell
+$env:NEXT_PUBLIC_SITE_URL = "https://paradise.paradise-contractors.workers.dev"; npm run deploy
 ```
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://paradise.paradise-contractors.workers.dev npm run deploy
+```
+
+Then verify: `/api/health`, `/api/health/db` (expects `"status":"ok"`), and
+`PLAYWRIGHT_BASE_URL=https://paradise.paradise-contractors.workers.dev npx playwright test`.
+
+The first deploy on an account needs a workers.dev subdomain. Set or change it in the dashboard:
+Workers & Pages → Account details → Subdomain (edit icon). Changing it moves every Worker on the
+account and the old hostname stops resolving immediately.
 
 Safer, staged alternative:
 

@@ -4,16 +4,17 @@ _Last updated: 2026-11-02 (Milestone 1 session)._
 
 ## Summary
 
-Milestone 1 (Foundation) is **implemented and verified locally and against a live
-Supabase project**, including a Cloudflare Workers build and a local
-Workers-runtime preview that reads from Supabase. **Nothing is deployed.**
+Milestone 1 (Foundation) is **complete and deployed**. The foundation placeholder
+site is live at **https://paradise.paradise-contractors.workers.dev** (Cloudflare
+Workers, version `e0af56b7-a718-4781-9170-0367c59415d8`, deployed 2026-11-02) and
+reads from the live Supabase project. No user-facing product features exist yet.
 
 ## Environments
 
 | Service | Identifier | State |
 | --- | --- | --- |
 | Supabase | project `paradise`, ref `iaruniafwipktocripud`, region us-east-1, org `paradise` | Active. Both migrations applied, trade categories seeded. $0/month (Free). |
-| Cloudflare | account `d871a8cd21f162e2dbd035a12ccea458` | Wrangler logged in (OAuth). No Workers deployed. |
+| Cloudflare | account `d871a8cd21f162e2dbd035a12ccea458`, workers.dev subdomain `paradise-contractors` | Worker `paradise` deployed. Workers Free plan. |
 | GitHub | [thetallerstandard-lab/Paradise-App](https://github.com/thetallerstandard-lab/Paradise-App) (**public**) | `main` pushed 2026-11-02 |
 
 ## Verification log — 2026-11-02, Windows 11, Node.js 26.13.0, npm 11.20.0
@@ -34,7 +35,9 @@ Workers-runtime preview that reads from Supabase. **Nothing is deployed.**
 | REST exposure | anon `GET /rest/v1/resource_requests` → `[]`; `POST /rest/v1/rpc/is_org_member` → 404 | **As intended** |
 | Bundle size | `wrangler deploy --dry-run` | 1.03 MiB gzip (Free limit 3 MiB) |
 | CI workflow (GitHub Actions, ubuntu, Node 22) | [run #1](https://github.com/thetallerstandard-lab/Paradise-App/actions/runs/41498281949) on `2b94286` | **Pass** — npm ci, typecheck, lint, unit tests, OpenNext build, Playwright e2e |
-| Production deploy | — | **Not done** — requires owner approval |
+| Production deploy (owner-approved) | `NEXT_PUBLIC_SITE_URL=https://paradise.paradise-contractors.workers.dev npm run deploy` | **Pass** — 1.14 MiB gzip, 18 ms startup |
+| Production smoke | `/`, `/api/health`, `/api/health/db` (`tradeCategories: 12`) | **Pass** |
+| E2E vs production | `PLAYWRIGHT_BASE_URL=https://paradise.paradise-contractors.workers.dev npx playwright test` | **Pass** — 6 tests |
 
 Resolved versions: Next.js 15.5.28, React 19.1.1, `@opennextjs/cloudflare` 1.20.15, Wrangler 4.156.2,
 `@supabase/supabase-js` 2.118.0, `@supabase/ssr` 0.7.0, Zod 4.6.7, Tailwind 4.3.3, Vitest 3.2.7,
@@ -44,15 +47,15 @@ Playwright 1.64.1, TypeScript 5.9.3, ESLint 9.39.5.
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| Next.js app, root page, `/api/health` | Tested | Both runtimes |
-| `/api/health/db` readiness check | Tested (manual, workerd) | Not in automated e2e: CI has no Supabase credentials |
+| Next.js app, root page, `/api/health` | **Released** | Placeholder home page only |
+| `/api/health/db` readiness check | **Released** | Verified in production; not in CI e2e (CI has no Supabase credentials) |
 | Tailwind v4 + shadcn/ui tokens and components | Implemented | Rendered; no visual review yet |
 | Environment validation | Tested | |
 | Supabase clients | Tested (anonymous reads) | Server client verified from workerd; signed-in sessions untested (no auth UI) |
 | Database schema, RLS, triggers | Tested | Applied; SQL smoke test passes |
 | `src/types/database.ts` | Generated | From the live project |
 | Domain validation + offer transition rules | Tested | |
-| OpenNext + Wrangler config | Tested (local) | Never deployed |
+| OpenNext + Wrangler config | Released | Deployed from Windows with Wrangler; no CI deploy yet |
 | GitHub Actions CI | Tested | Run #1 green |
 | Auth UI, onboarding, map, exchange UI | Planned | Milestones 2–3 |
 | Paradise Points transfers / ledger | Planned | Excluded from MVP |

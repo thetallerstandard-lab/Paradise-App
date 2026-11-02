@@ -1,6 +1,7 @@
 # Deployment
 
-**Status: never deployed.** Production deploys require explicit approval from the project owner.
+**Status: deployed** 2026-11-02 (manual `npm run deploy` from the owner's machine).
+Production deploys require explicit approval from the project owner.
 
 ## Environments
 
@@ -8,7 +9,7 @@
 | --- | --- | --- | --- |
 | Local dev | `next dev` (Node.js) | Supabase (hosted dev project or local stack) | http://localhost:3000 |
 | Local Workers preview | `wrangler dev` via `npm run preview` (workerd) | same as dev | http://localhost:8787 |
-| Production | Cloudflare Worker `paradise` | Supabase production project | `paradise.<account>.workers.dev` → custom domain (TBD) |
+| Production | Cloudflare Worker `paradise` | Supabase project `iaruniafwipktocripud` | https://paradise.paradise-contractors.workers.dev → custom domain (TBD) |
 | Staging (planned) | Worker `paradise-staging` (wrangler `env.staging`) | Supabase staging project | TBD |
 
 ## Pipeline

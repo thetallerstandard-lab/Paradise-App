@@ -1,6 +1,7 @@
 # Milestone 1 — Foundation
 
-**Status: Locally verified, not deployed.** 2026-11-02. Evidence: [CURRENT_STATUS.md](../CURRENT_STATUS.md).
+**Status: Complete and deployed** to https://paradise.paradise-contractors.workers.dev on 2026-11-02.
+Evidence: [CURRENT_STATUS.md](../CURRENT_STATUS.md).
 
 ## Definition of done
 
@@ -23,5 +24,5 @@
 | `CURRENT_STATUS.md` accurate | ✅ |
 | `NEXT_STEPS.md` identifies next task | ✅ |
 
-GitHub repository created and CI run #1 passed. Only an (optional, approval-gated) first deploy remains
-([NEXT_STEPS.md](../development/NEXT_STEPS.md)).
+GitHub repository created, CI run #1 passed, first production deploy verified with the e2e suite.
+Next: [NEXT_STEPS.md](../development/NEXT_STEPS.md).

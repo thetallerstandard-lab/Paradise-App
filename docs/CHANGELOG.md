@@ -5,6 +5,12 @@ assigned at first release.
 
 ## [Unreleased]
 
+### Released — 2026-11-02, first deploy
+
+- Worker `paradise` deployed to https://paradise.paradise-contractors.workers.dev
+  (version `e0af56b7-a718-4781-9170-0367c59415d8`). Placeholder home page, `/api/health`, `/api/health/db`.
+- Cloudflare account workers.dev subdomain changed from `thetallerstandard` to `paradise-contractors`.
+
 ### Added — 2026-11-02, GitHub
 
 - Pushed to public repository `thetallerstandard-lab/Paradise-App`; CI run #1 passed.
