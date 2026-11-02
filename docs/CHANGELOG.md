@@ -5,6 +5,10 @@ assigned at first release.
 
 ## [Unreleased]
 
+### Added — 2026-11-02, GitHub
+
+- Pushed to public repository `thetallerstandard-lab/Paradise-App`; CI run #1 passed.
+
 ### Added — 2026-11-02, Supabase connected
 
 - Supabase project `iaruniafwipktocripud` (us-east-1): initial schema applied, trade categories seeded.

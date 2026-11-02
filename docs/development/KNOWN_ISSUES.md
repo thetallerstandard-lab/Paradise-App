@@ -9,6 +9,7 @@
 | 5 | `profiles` FKs use `ON DELETE RESTRICT` | Deleting an auth user with created records fails | Design account-deletion flow ([DATA_LIFECYCLE](../architecture/DATA_LIFECYCLE.md)) |
 | 6 | Security headers (CSP etc.) not set | Weaker browser hardening | Milestone 2 |
 | 7 | `next/font/google` downloads fonts at build time | Builds need network access | Acceptable; self-host fonts if CI is offline |
-| 8 | CI workflow untested; CI builds with placeholder Supabase values unless repository secrets are set | `/api/health/db` would report error in a CI-built Worker | Add `NEXT_PUBLIC_SUPABASE_*` repository secrets when the repo exists |
+| 8 | CI builds with placeholder Supabase values (no repository secrets set) | `/api/health/db` would report error in a CI-built Worker; current tests unaffected | Add `NEXT_PUBLIC_SUPABASE_*` repository secrets before CI builds anything deployable |
+| 11 | Repository is public | Code, docs, schema and Supabase project ref are world-readable (no secrets committed) | Owner's choice (2026-11-02). Never commit `.env.local` / `.dev.vars`; keep secrets in Wrangler/GitHub secrets |
 | 9 | ESLint 9.39 is flagged deprecated by npm | None today | Upgrade with the next Next.js upgrade |
 | 10 | Next.js 15.5 rather than 16 | Misses Next 16 features | Evaluate after Milestone 2; verify with `cf:build` + preview |

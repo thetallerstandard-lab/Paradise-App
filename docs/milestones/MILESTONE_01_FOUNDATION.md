@@ -23,5 +23,5 @@
 | `CURRENT_STATUS.md` accurate | ✅ |
 | `NEXT_STEPS.md` identifies next task | ✅ |
 
-Remaining before calling it fully closed: GitHub repository and first CI run
+GitHub repository created and CI run #1 passed. Only an (optional, approval-gated) first deploy remains
 ([NEXT_STEPS.md](../development/NEXT_STEPS.md)).

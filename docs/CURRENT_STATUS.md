@@ -14,7 +14,7 @@ Workers-runtime preview that reads from Supabase. **Nothing is deployed.**
 | --- | --- | --- |
 | Supabase | project `paradise`, ref `iaruniafwipktocripud`, region us-east-1, org `paradise` | Active. Both migrations applied, trade categories seeded. $0/month (Free). |
 | Cloudflare | account `d871a8cd21f162e2dbd035a12ccea458` | Wrangler logged in (OAuth). No Workers deployed. |
-| GitHub | — | No repository yet |
+| GitHub | [thetallerstandard-lab/Paradise-App](https://github.com/thetallerstandard-lab/Paradise-App) (**public**) | `main` pushed 2026-11-02 |
 
 ## Verification log — 2026-11-02, Windows 11, Node.js 26.13.0, npm 11.20.0
 
@@ -33,7 +33,7 @@ Workers-runtime preview that reads from Supabase. **Nothing is deployed.**
 | RLS / trigger behaviour | `supabase/tests/rls_smoke.sql` | **Pass** — 13/13 steps as expected (rolled back) |
 | REST exposure | anon `GET /rest/v1/resource_requests` → `[]`; `POST /rest/v1/rpc/is_org_member` → 404 | **As intended** |
 | Bundle size | `wrangler deploy --dry-run` | 1.03 MiB gzip (Free limit 3 MiB) |
-| CI workflow | — | **Not run** — no GitHub remote |
+| CI workflow (GitHub Actions, ubuntu, Node 22) | [run #1](https://github.com/thetallerstandard-lab/Paradise-App/actions/runs/41498281949) on `2b94286` | **Pass** — npm ci, typecheck, lint, unit tests, OpenNext build, Playwright e2e |
 | Production deploy | — | **Not done** — requires owner approval |
 
 Resolved versions: Next.js 15.5.28, React 19.1.1, `@opennextjs/cloudflare` 1.20.15, Wrangler 4.156.2,
@@ -53,13 +53,14 @@ Playwright 1.64.1, TypeScript 5.9.3, ESLint 9.39.5.
 | `src/types/database.ts` | Generated | From the live project |
 | Domain validation + offer transition rules | Tested | |
 | OpenNext + Wrangler config | Tested (local) | Never deployed |
-| GitHub Actions CI | Implemented | Not run |
+| GitHub Actions CI | Tested | Run #1 green |
 | Auth UI, onboarding, map, exchange UI | Planned | Milestones 2–3 |
 | Paradise Points transfers / ledger | Planned | Excluded from MVP |
 
 ## Open items
 
-1. **GitHub repository** — not yet created; CI never run.
+1. **CI repository secrets** — `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` not set, so CI builds
+   with placeholders (fine for current tests).
 2. **`SUPABASE_SECRET_KEY`** not set locally or in Cloudflare (not needed until an admin task exists).
    Copy it from Supabase → Project Settings → API Keys; never commit it.
 3. **Supabase Auth URL configuration** (Site URL, redirect URLs) not yet set — needed in Milestone 2.
