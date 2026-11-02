@@ -1,0 +1,130 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+ * Paradise design tokens. Brand palette first, then semantic tokens that
+ * shadcn/ui components consume. Contrast notes: docs/product/DESIGN_SYSTEM.md
+ */
+:root {
+  /* Brand palette */
+  --forest-950: #0c1f17;
+  --forest-900: #12301f;
+  --forest-800: #1a4230;
+  --forest-700: #22573f;
+  --forest-100: #dfe9e2;
+  --ivory-50: #fbf8f1;
+  --ivory-100: #f5f0e4;
+  --ivory-200: #ebe3d0;
+  --charcoal-950: #16181a;
+  --charcoal-900: #222528;
+  --charcoal-700: #3d4246;
+  --charcoal-500: #5f666b;
+  --brass-600: #8a6d2f;
+  --brass-500: #a8873f;
+  --brass-300: #d3bd85;
+
+  --radius: 0.5rem;
+
+  /* Semantic tokens (light) */
+  --background: var(--ivory-50);
+  --foreground: var(--charcoal-950);
+  --card: #ffffff;
+  --card-foreground: var(--charcoal-950);
+  --popover: #ffffff;
+  --popover-foreground: var(--charcoal-950);
+  --primary: var(--forest-900);
+  --primary-foreground: var(--ivory-50);
+  --secondary: var(--ivory-200);
+  --secondary-foreground: var(--charcoal-900);
+  --muted: var(--ivory-100);
+  --muted-foreground: var(--charcoal-500);
+  --accent: var(--brass-500);
+  --accent-foreground: var(--charcoal-950);
+  --brass: var(--brass-600);
+  --destructive: #b42318;
+  --destructive-foreground: #ffffff;
+  --border: #d9d1bd;
+  --input: #cfc6b0;
+  --ring: var(--brass-600);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --background: var(--forest-950);
+    --foreground: var(--ivory-100);
+    --card: var(--forest-900);
+    --card-foreground: var(--ivory-100);
+    --popover: var(--forest-900);
+    --popover-foreground: var(--ivory-100);
+    --primary: var(--ivory-100);
+    --primary-foreground: var(--forest-950);
+    --secondary: var(--forest-800);
+    --secondary-foreground: var(--ivory-100);
+    --muted: var(--forest-800);
+    --muted-foreground: #b9c4bc;
+    --accent: var(--brass-300);
+    --accent-foreground: var(--charcoal-950);
+    --brass: var(--brass-300);
+    --destructive: #f97066;
+    --destructive-foreground: var(--charcoal-950);
+    --border: #2f5a45;
+    --input: #3a6a53;
+    --ring: var(--brass-300);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-brass: var(--brass);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-forest-950: var(--forest-950);
+  --color-forest-900: var(--forest-900);
+  --color-forest-800: var(--forest-800);
+  --color-forest-700: var(--forest-700);
+  --color-forest-100: var(--forest-100);
+  --color-ivory-50: var(--ivory-50);
+  --color-ivory-100: var(--ivory-100);
+  --color-ivory-200: var(--ivory-200);
+  --color-charcoal-950: var(--charcoal-950);
+  --color-charcoal-900: var(--charcoal-900);
+  --color-charcoal-700: var(--charcoal-700);
+  --color-charcoal-500: var(--charcoal-500);
+  --color-brass-600: var(--brass-600);
+  --color-brass-500: var(--brass-500);
+  --color-brass-300: var(--brass-300);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}

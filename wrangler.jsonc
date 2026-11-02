@@ -1,0 +1,31 @@
+// Cloudflare Workers configuration for Paradise (Next.js via OpenNext).
+// See docs/development/CLOUDFLARE_DEPLOYMENT.md before changing anything here.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "paradise",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-15",
+  // nodejs_compat is required by OpenNext. global_fetch_strictly_public stops
+  // fetch() from reaching the zone's own origin by mistake.
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Lets the worker call itself (used by OpenNext for revalidation).
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "paradise"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  },
+  // Non-secret runtime values. Secrets (SUPABASE_SECRET_KEY) are set with
+  // `npx wrangler secret put` and never committed. NEXT_PUBLIC_* values are
+  // inlined at build time and must be present in the build environment.
+  "vars": {
+    "APP_ENV": "production"
+  }
+}

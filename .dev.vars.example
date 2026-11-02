@@ -1,0 +1,5 @@
+# Copy to .dev.vars for `npm run preview` (local Workers runtime via Wrangler).
+# Holds the runtime values a deployed Worker would get from `wrangler secret put`.
+APP_ENV=development
+NEXTJS_ENV=development
+SUPABASE_SECRET_KEY=
